@@ -22,7 +22,7 @@ export const todoSlice = createSlice({
       newState.todos.push(action.payload);
       return newState;
     },
-  }
+  },
 });
 
 export const { addItem } = todoSlice.actions;

@@ -1,26 +1,25 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getCookie } from "cookies-next";
+import { AUTH_KEY } from "@/constants/cookieKeys";
+import { LoginResponsePayload } from "@/models/LoginModel";
 
-export const useGuard = (): boolean => {
-  const [authorized, setAuthorized] = useState(true);
+export const useGuard = () => {
+  const [auth, setAuth] = useState<LoginResponsePayload>();
   const router = useRouter();
-  if(!authorized) {
-    router.push("/");
-  }
 
-  // const { data: session, status } = useSession();
+  const currentAuth = getCookie(AUTH_KEY)?.toString();
 
-  // useEffect(() => {
-  //   if(status != "authenticated"){
-  //     router.push("/login");
-  //   }else if (status === "authenticated") {
-  //     setAuthorized(true);
-  //   }
-  // }, [status, router])
+  useEffect(() => {
+    if (currentAuth) {
+      setAuth(JSON.parse(currentAuth));
+    }
+    else{
+        router.push('/login');
+    }
+  }, [currentAuth, router])
 
-
-  return authorized;
-}
+  return auth;
+};

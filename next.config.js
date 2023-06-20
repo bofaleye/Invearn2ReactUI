@@ -1,13 +1,18 @@
-/** @type {import('next').NextConfig} */ 
-const nextConfig = { 
-  webpack(config) { 
-    config.module.rules.push({ 
-      test: /\.svg$/, 
-      
-      use: ["@svgr/webpack"], 
-    }); 
-    return config; 
-  }
-} 
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
+  webpack5: true,
+  distDir: "build",
+  // output: 'export',
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/,
+
+      use: ["@svgr/webpack"],
+    });
+    return config;
+  },
+};
 
 module.exports = nextConfig;
