@@ -36,5 +36,4 @@ next-env.d.ts
 
 #.vs
 .vs
-package-lock.json
 yarn.lock
