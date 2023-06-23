@@ -2,9 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  webpack5: true,
-  distDir: "build",
-  // output: 'export',
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -13,6 +10,7 @@ const nextConfig = {
     });
     return config;
   },
+  output: 'standalone',
 };
 
 module.exports = nextConfig;

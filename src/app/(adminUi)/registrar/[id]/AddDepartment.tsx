@@ -50,7 +50,7 @@ const _AddDepartment: React.ForwardRefRenderFunction<
   useEffect(() => {
     if (response?.isSuccess) {
       hideDrawer();
-      setToggleModal(!toggleModal);
+      setToggleModal(true);
       OnAddComplete(response?.isSuccess);
     }
   }, [response]);
@@ -89,12 +89,11 @@ const _AddDepartment: React.ForwardRefRenderFunction<
 
   return (
     <>
-      {toggleModal && (
-        <SuccessModal
-          onDoneClicked={() => setToggleModal(!toggleModal)}
-          message="Department added Successfully"
-        />
-      )}
+      <SuccessModal
+        openModal={toggleModal}
+        onDoneClicked={() => setToggleModal(false)}
+        message="Department added Successfully"
+      />
       <ReusableDrawer
         drawerTitle="Add Department"
         drawerId="add-department-drawer"

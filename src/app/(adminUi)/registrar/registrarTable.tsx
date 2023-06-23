@@ -64,7 +64,7 @@ const RegistrarsTable: React.FC<IRegistrarsTableProps> = ({
             ),
             email: row.email,
             currency: row.currency,
-            state: row.stateId,
+            state: row.state.name,
             country: row.country ? row.country : 'Nigeria',
             status: (
               <div className="flex items-center text-gray-900 font-medium">

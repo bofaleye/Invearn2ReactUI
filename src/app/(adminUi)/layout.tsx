@@ -1,8 +1,12 @@
+"use client"
+
 import React from "react";
 import AdminUiNavbar from "@/components/AdminUi/AdminUiNavbar";
 import AdminUiSidebar from "@/components/AdminUi/AdminUiSidebar";
+import { useGuard } from "@/hooks/useGuard";
 
 const AdminSettingsLayout: React.FC<any> = ({ children }) => {
+  useGuard();
   return (
     <>
       <AdminUiNavbar />

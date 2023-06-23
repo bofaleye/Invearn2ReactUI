@@ -5,17 +5,91 @@ import { downloadCSV, getInitials } from "@/utils";
 import { BsThreeDots } from "react-icons/bs";
 import Link from "next/link";
 import { Delete, Edit, Eye } from "@/assets";
-import { Select } from "flowbite-react";
+import { Modal, Select } from "flowbite-react";
 import Table from "@/components/Table";
 import { IUsersTableProps } from "@/models/User";
+import { RiErrorWarningLine } from "react-icons/ri";
+import AppButton from "@/components/Button";
+import { useDeleteUserMutation } from "./UserApiSlice";
+import SuccessModal from "@/components/Modals/SuccessModal";
+import { toast } from "react-toastify";
+
+const PromptModal = (
+  bodyText: string,
+  showModal: boolean,
+  onClose: () => void,
+  onDone: () => void,
+  doneBtnBusy: boolean
+) => {
+  return (
+    <Modal size="sm" dismissible popup show={showModal} onClose={() => onClose}>
+      <Modal.Body className="h-[300px] p-4 flex  items-center justify-center">
+        <div className=" flex flex-col justify-around items-center text-center">
+          <p>
+            <RiErrorWarningLine color="red" size={34} />
+          </p>
+          <p>{bodyText}</p>
+          <div className=" w-full flex justify-between mt-4 mb-4">
+            <AppButton
+              text="Cancel"
+              appButtonType="grey-button"
+              buttonWidth="w-[45%]"
+              buttonClick={onClose}
+            />
+
+            <AppButton
+              isLoading={doneBtnBusy}
+              disabled={doneBtnBusy}
+              text="Yes, Delete"
+              appButtonType="red-button"
+              buttonWidth="w-[45%]"
+              buttonClick={onDone}
+            />
+          </div>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+};
 
 const UsersTable: React.FC<IUsersTableProps> = ({
   data,
+  refetch,
   handleEdit,
-  handleDelete,
 }) => {
   const [columns, setColumns] = useState<ITableColumn[]>([]);
   const [page, setPage] = useState<number>(1);
+  const [deleteUser, deleteResponse] = useDeleteUserMutation();
+
+  const [showIsDeleteModal, setShowIsDeleteModal] = useState(false);
+  const handleDeleteModal = () => {
+    setShowIsDeleteModal(!showIsDeleteModal);
+  };
+  const [toggleSuccessModal, setToggleSuccessModal] = useState(false);
+  const handleDelete = (row: any) => {
+    deleteUser(row.id)
+      .then((res: any) => {
+        if (deleteResponse.isSuccess) {
+          handleDeleteModal();
+          setToggleSuccessModal(!toggleSuccessModal);
+          refetch();
+        }
+      })
+      .catch((error) => {
+        toast.error(`An error occured, kindly try again`, {
+          position: toast.POSITION.TOP_LEFT,
+        });
+      });
+  };
+
+  useEffect(() => {
+    if (deleteResponse.isSuccess) {
+      handleDeleteModal();
+      setToggleSuccessModal(!toggleSuccessModal);
+      refetch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deleteResponse.isSuccess]);
 
   useEffect(() => {
     setColumns(usersTableColumns);
@@ -92,19 +166,41 @@ const UsersTable: React.FC<IUsersTableProps> = ({
                         View Profile
                       </Link>
                       <div
-                        onClick={() => handleEdit(row)}
+                        onClick={() => {
+                          handleEdit(row);
+                        }}
                         className="flex cursor-pointer text-left py-3 border-b border-neutral-50 text-small text-gray-700 items-center gap-2"
                       >
                         <Edit />
                         Edit Profile
                       </div>
                       <div
-                        onClick={() => handleDelete(row)}
+                        onClick={() => handleDeleteModal()}
                         className="flex cursor-pointer text-left py-3 border-b border-neutral-50 text-small text-red-600 items-center gap-2"
                       >
                         <Delete />
                         Delete
                       </div>
+                      {PromptModal(
+                        "Are sure you want to delete this user?",
+                        showIsDeleteModal,
+                        () => {
+                          setShowIsDeleteModal(!showIsDeleteModal);
+                        },
+                        () => {
+                          handleDelete(row);
+                        },
+                        deleteResponse.isLoading
+                      )}
+                      {toggleSuccessModal && (
+                        <SuccessModal
+                          onDoneClicked={() =>
+                            setToggleSuccessModal(!toggleSuccessModal)
+                          }
+                          message="User is deleted
+                     Successfully"
+                        />
+                      )}
                     </div>
                   ) : (
                     ""

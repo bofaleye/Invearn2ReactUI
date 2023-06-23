@@ -11,6 +11,6 @@ import * as Yup from "yup";
       .required("Middle Name field empty"),
     email: Yup.string().email("Invalid email address").required("Required"),
     dateOfBirth: Yup.string().required("Date of birth field empty"),
-    role: Yup.string().required(),
+    role: Yup.string().required("Role is empty"),
     gender: Yup.string().oneOf(["male", "female"]).required("Gender field empty"),
   });

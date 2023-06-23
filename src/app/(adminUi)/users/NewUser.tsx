@@ -14,24 +14,26 @@ import * as Yup from "yup";
 import FormButton from "@/components/FormElements/FormButton";
 import ReusableDrawer, { ReusableDrawerRef } from "@/components/ReusableDrawer";
 import { useFetchUserRolesQuery } from "./userRolesApiSlice";
-import { useCreateUserMutation } from "./[id]/createUserApiSlice";
+import { useCreateUserMutation } from "./UserApiSlice";
 import { toast } from "react-toastify";
 import { newUserSchema } from "./newUserSchema";
 import { UserRole } from "@/models/UserRole";
+import SuccessModal from "@/components/Modals/SuccessModal";
 
 type FormData = Yup.InferType<typeof newUserSchema>;
+interface INewUserProps {
+  OnCreateComplete: (isSuccess: boolean) => void;
+}
 
-const _NewUser: React.ForwardRefRenderFunction<ReusableDrawerRef> = (
-  props,
-  ref
-) => {
+const _NewUser: React.ForwardRefRenderFunction<
+  ReusableDrawerRef,
+  INewUserProps
+> = (props, ref) => {
   const Roles = useFetchUserRolesQuery();
   const [createUser, response] = useCreateUserMutation();
   const [roleOptions, setRoleOptions] = useState<object[]>([]);
-  let drawerRef = useRef<ReusableDrawerRef>(null); // DrawerRef can be used to control the drawer by the parent component
-
+  let drawerRef = useRef<ReusableDrawerRef>(null);
   useImperativeHandle(ref, () => ({
-    //this additional Ref is to pass the control of the DRAWER to the parent component of AddDepartment Component
     hideDrawer,
     showDrawer,
   }));
@@ -44,6 +46,16 @@ const _NewUser: React.ForwardRefRenderFunction<ReusableDrawerRef> = (
   } = useForm<FormData>({
     resolver: yupResolver(newUserSchema),
   });
+  const [toggleModal, setToggleModal] = useState(false);
+  const { OnCreateComplete } = props;
+
+  useEffect(() => {
+    if (response?.isSuccess) {
+      hideDrawer();
+      OnCreateComplete(response?.isSuccess);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [response]);
 
   const onSubmit = (data: FormData) => {
     const newUserData = {
@@ -57,14 +69,19 @@ const _NewUser: React.ForwardRefRenderFunction<ReusableDrawerRef> = (
         toast.error(`${response.error}`, {
           position: toast.POSITION.TOP_LEFT,
         });
-      } else {
-        toast.success(`User created successfully`, {
-          position: toast.POSITION.TOP_LEFT,
-        });
-        reset();
       }
     });
   };
+
+  useEffect(() => {
+    if (response?.isSuccess) {
+      reset();
+      hideDrawer();
+      setToggleModal(true);
+      OnCreateComplete(response?.isSuccess);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [response]);
 
   useEffect(() => {
     let options: object[] = [];
@@ -79,12 +96,6 @@ const _NewUser: React.ForwardRefRenderFunction<ReusableDrawerRef> = (
     setRoleOptions(options);
   }, [Roles.data]);
 
-  useEffect(() => {
-    if (response?.isSuccess) {
-      hideDrawer();
-    }
-  }, [response]);
-
   const hideDrawer = () => {
     if (drawerRef.current) {
       drawerRef.current.hideDrawer();
@@ -98,99 +109,106 @@ const _NewUser: React.ForwardRefRenderFunction<ReusableDrawerRef> = (
   };
 
   return (
-    <ReusableDrawer
-      drawerId="create-user-drawer"
-      placement="right"
-      drawerTitle="Add User"
-      subTitle="User Information"
-      ref={drawerRef}
-      onDrawerHide={reset}
-    >
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <MyTextInput
-          label="First Name"
-          type="text"
-          register={register}
-          name="firstname"
-          errors={errors}
-        />
-        <MyTextInput
-          label="Middle Name"
-          name="middlename"
-          type="text"
-          register={register}
-          errors={errors}
-        />
-        <MyTextInput
-          label="Last Name"
-          name="lastname"
-          type="text"
-          register={register}
-          errors={errors}
-        />
-        <MyTextInput
-          label="Email"
-          name="email"
-          type="emai"
-          register={register}
-          errors={errors}
-        />
-        <MyTextInput
-          label="Date of Birth"
-          name="dateOfBirth"
-          type="date"
-          register={register}
-          errors={errors}
-        />
-        <MySelect
-          label="Gender"
-          name="gender"
-          options={[
-            {
-              name: "Male",
-              value: "male",
-            },
-            {
-              name: "Female",
-              value: "female",
-            },
-          ]}
-          register={register}
-          errors={errors}
-        />
+    <>
+      <SuccessModal
+        openModal={toggleModal}
+        onDoneClicked={() => setToggleModal(false)}
+        message="User added Successfully"
+      />
+      <ReusableDrawer
+        drawerId="create-user-drawer"
+        placement="right"
+        drawerTitle="Add User"
+        subTitle="User Information"
+        ref={drawerRef}
+        onDrawerHide={reset}
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <MyTextInput
+            label="First Name"
+            type="text"
+            register={register}
+            name="firstname"
+            errors={errors}
+          />
+          <MyTextInput
+            label="Middle Name"
+            name="middlename"
+            type="text"
+            register={register}
+            errors={errors}
+          />
+          <MyTextInput
+            label="Last Name"
+            name="lastname"
+            type="text"
+            register={register}
+            errors={errors}
+          />
+          <MyTextInput
+            label="Email"
+            name="email"
+            type="emai"
+            register={register}
+            errors={errors}
+          />
+          <MyTextInput
+            label="Date of Birth"
+            name="dateOfBirth"
+            type="date"
+            register={register}
+            errors={errors}
+          />
+          <MySelect
+            label="Gender"
+            name="gender"
+            options={[
+              {
+                name: "Male",
+                value: "male",
+              },
+              {
+                name: "Female",
+                value: "female",
+              },
+            ]}
+            register={register}
+            errors={errors}
+          />
 
-        <MySelect
-          label="User Role"
-          name="role"
-          options={roleOptions}
-          register={register}
-          errors={errors}
-        />
-        <div className="flex col-span-6 sm:col-full space-x-4 mt-4 justify-end">
-          <button
-            data-drawer-hide="create-user-drawer"
-            aria-controls="create-user-drawer"
-            className="text-CEMCS-Blue-100 border  w-[25%] border-gray-300 focus:outline-none hover:bg-gray-100  focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            type="button"
-          >
-            Back
-          </button>
+          <MySelect
+            label="User Role"
+            name="role"
+            options={roleOptions}
+            register={register}
+            errors={errors}
+          />
+          <div className="flex col-span-6 sm:col-full space-x-4 mt-4 justify-end">
+            <button
+              data-drawer-hide="create-user-drawer"
+              aria-controls="create-user-drawer"
+              className="text-CEMCS-Blue-100 border  w-[25%] border-gray-300 focus:outline-none hover:bg-gray-100  focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              type="button"
+            >
+              Back
+            </button>
 
-          <FormButton
-            className="text-white bg-green-500 hover:bg-green-600 focus:ring-4
+            <FormButton
+              className="text-white bg-green-500 hover:bg-green-600 focus:ring-4
               w-[25%]
               focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            id="successButton"
-            type="submit"
-            disabled={response.isLoading}
-          >
-            {response.isLoading ? "...Saving" : "Save"}
-          </FormButton>
-        </div>
-      </form>
-    </ReusableDrawer>
+              id="successButton"
+              type="submit"
+              disabled={response.isLoading}
+            >
+              {response.isLoading ? "...Saving" : "Save"}
+            </FormButton>
+          </div>
+        </form>
+      </ReusableDrawer>
+    </>
   );
 };
-const NewUser = forwardRef<ReusableDrawerRef>(_NewUser);
+const NewUser = forwardRef<ReusableDrawerRef, INewUserProps>(_NewUser);
 
 export default NewUser;

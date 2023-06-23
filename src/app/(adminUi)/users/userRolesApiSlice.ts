@@ -11,9 +11,17 @@ const extendedApi = apiSlice.injectEndpoints({
                 return response.payload as UserRole[];
             },
         }),
+        addRoleToUser: builder.mutation({
+            query: (body)=>({
+                url: `roles/assignroletouser`,
+                method: "POST",
+                body
+            })
+        })
     }),
 });
 
 export const {
     useFetchUserRolesQuery,
+    useAddRoleToUserMutation
 } = extendedApi;

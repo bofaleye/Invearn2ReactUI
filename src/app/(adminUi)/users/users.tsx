@@ -1,35 +1,44 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-
 import NewUser from "./NewUser";
-import { Select, Modal } from "flowbite-react";
-import { Delete, Edit, Eye, PlusIcon } from "@/assets";
-import Table from "@/components/Table";
-import { ITableColumn, ITableData } from "@/components/Table/model";
-
-import { BsThreeDots } from "react-icons/bs";
+import { PlusIcon } from "@/assets";
+import { ITableColumn } from "@/components/Table/model";
 import SuccessModal from "@/components/Modals/SuccessModal";
-import { RiErrorWarningLine } from "react-icons/ri";
-import AppButton from "@/components/Button";
-import { useFetchUsersQuery } from "./[id]/createUserApiSlice";
+import { useFetchUsersQuery } from "./UserApiSlice";
 import BreadCrumbs from "@/components/AdminUi/BreadCrumbs";
 
 import UsersTable from "./usersTable";
 import { IUser } from "@/models/User";
 import AppSkeleton from "@/components/Skeleton";
 import { ReusableDrawerRef } from "@/components/ReusableDrawer";
+import EditUser from "./[id]/EditUserProfile";
 
 export default function Users() {
-  const { data, isFetching } = useFetchUsersQuery();
+  let addNewUserRef = useRef<ReusableDrawerRef>(null);
+  let editUserRef = useRef<ReusableDrawerRef>(null);
+  const {
+    data,
+    isFetching: isFetchingUsers,
+    refetch: refetchUsers,
+  } = useFetchUsersQuery();
   const [columns, setColumns] = useState<ITableColumn[]>([]);
   const [usersData, setUsersData] = useState<IUser[]>([]);
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
-  let addNewUserRef = useRef<ReusableDrawerRef>(null);
+  const [actionUser, setActionUser] = useState<IUser>();
+
+  const handleUsersRefresh = (isSuccess: boolean) => {
+    if (isSuccess) {
+      refetchUsers();
+    }
+  };
+
+  const handleEditDrawer = (data: IUser) => {
+    setActionUser(data);
+    editUserRef.current?.showDrawer();
+  };
 
   useEffect(() => {
     setUsersData(data || []);
@@ -60,15 +69,20 @@ export default function Users() {
             <PlusIcon className="h-8 w-8" /> Add New User
           </button>
 
-          <NewUser ref={addNewUserRef} />
+          <NewUser ref={addNewUserRef} OnCreateComplete={handleUsersRefresh} />
+          <EditUser
+            ref={editUserRef}
+            userData={actionUser as IUser}
+            OnEditComplete={handleUsersRefresh}
+          />
         </div>
-        {isFetching ? (
+        {isFetchingUsers ? (
           <AppSkeleton type="table" />
         ) : (
           <UsersTable
             data={usersData}
-            handleEdit={undefined}
-            handleDelete={undefined}
+            refetch={refetchUsers}
+            handleEdit={(data: IUser) => handleEditDrawer(data)}
           />
         )}
       </div>

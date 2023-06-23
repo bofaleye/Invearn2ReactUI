@@ -6,15 +6,17 @@ import AppButton from "../Button";
 
 export interface SuccessModalProps {
   message?: string;
+  openModal?: boolean
   onDoneClicked?: () => void;
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({
   message,
+  openModal=false,
   onDoneClicked,
 }) => {
   return (
-    <Modal position="center" dismissible popup onClose={() => onDoneClicked}>
+    <Modal position="center" dismissible popup show={openModal} onClose={onDoneClicked}>
       <Modal.Body>
         <div className="relative p-4 w-500 max-w-l h-full md:h-auto">
           {/* <!-- Modal content --> */}
@@ -59,7 +61,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
               text="Done"
               buttonWidth="w-[50%]"
               buttonClick={onDoneClicked}
-              type="submit"
+              type="button"
             />
             {/* <button
               onClick={onDoneClicked}

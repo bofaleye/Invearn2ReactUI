@@ -62,6 +62,7 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                 <SidebarItem
                   mobileTag={tag}
                   title="App Management"
+                  urls={[APP_ROUTES.registrar, "/users"]}
                   icon={
                     <LockIcon className="flex-shrink-0 w-6 h-6 text-gray-500 group-hover:text-green-800 transition duration-75 group-hover:text-sidebar-icons-active " />
                   }
@@ -69,7 +70,8 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                   <li>
                     <Link
                       href={APP_ROUTES.registrar}
-                      className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      className={`flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700 
+                      ${isActiveRoute('registrar') ? 'is-active bg-green-100 text-green-800 dark:bg-gray-700' : ''}`}
                     >
                       Registrar
                     </Link>
@@ -85,7 +87,8 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                   <li>
                     <Link
                       href="/users"
-                      className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      className={`flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700
+                      ${isActiveRoute('users') ? 'is-active bg-green-100 text-green-800 dark:bg-gray-700' : ''}`}
                     >
                       Users
                     </Link>

@@ -10,6 +10,7 @@ import { useCreateRegistrarMutation, useFetchCountryStatesQuery } from "./regist
 import SuccessModal from "@/components/Modals/SuccessModal";
 import AppButton from "@/components/Button";
 import { CountryStateModel } from "@/models/registrar";
+import { toast } from "react-toastify";
 
 const schema = Yup.object({
   name: Yup.string().required("Registrar Name is Required"),
@@ -77,13 +78,20 @@ const _CreateRegistrar: React.ForwardRefRenderFunction<ReusableDrawerRef, Create
     if(response?.isSuccess){
       reset();
       hideDrawer();
-      setToggleModal(!toggleModal);
+      setToggleModal(true);
       OnCreateComplete(response?.isSuccess);
     }
   },[response])
 
   const onSubmit = (data: FormData) =>{
-    createRegistrar({...data, applicationRoleId: "d9998801-e182-8aa0-186e-948608859953"});
+    createRegistrar({...data, applicationRoleId: "d9998801-e182-8aa0-186e-948608859953"})
+    .then((res: any) => {
+      if (res.error) {
+        toast.error(`${res.error.data.title}`, {
+          position: toast.POSITION.TOP_LEFT,
+        });
+      }
+    });
   }
   const hideDrawer = () => {
     if (drawerRef.current) {
@@ -99,12 +107,11 @@ const _CreateRegistrar: React.ForwardRefRenderFunction<ReusableDrawerRef, Create
 
   return (
     <>
-      {toggleModal && (
-        <SuccessModal
-          onDoneClicked={() => setToggleModal(!toggleModal)}
-          message="Registrar added Successfully"
-        />
-      )}
+      <SuccessModal
+        openModal={toggleModal}
+        onDoneClicked={() => setToggleModal(false)}
+        message="Registrar added Successfully"
+      />
       <ReusableDrawer
         drawerId="create-registrar-drawer"
         placement="right"

@@ -10,6 +10,7 @@ import { useFetchCountryStatesQuery, useUpdateRegistrarMutation } from "./regist
 import SuccessModal from "@/components/Modals/SuccessModal";
 import AppButton from "@/components/Button";
 import { CountryStateModel, IRegistrarsTableData } from "@/models/registrar";
+import { toast } from "react-toastify";
 
 const schema = Yup.object({
   name: Yup.string().required("Registrar Name is Required"),
@@ -39,6 +40,7 @@ const _EditRegistrar: React.ForwardRefRenderFunction<ReusableDrawerRef, EditRegi
     handleSubmit,
     formState: { errors },
     setValue,
+    reset
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
@@ -51,10 +53,14 @@ const _EditRegistrar: React.ForwardRefRenderFunction<ReusableDrawerRef, EditRegi
   const [toggleModal, setToggleModal] = useState(false);
 
   useEffect(()=> {
-    const fields = ['id', 'name', 'email', 'address', 'currency', 'stateId', 'country', 'phone'];
+    const fields = ['id', 'name', 'email', 'address', 'currency', 'country', 'phone'];
+    if(registrar && registrar.state)
+      setValue("stateId", registrar.state.id);
+
     fields.forEach((field: any) => {
-      if(registrar && registrar[field])
+      if(registrar && registrar[field]){
         setValue(field, registrar[field])
+      }
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[registrar]);
@@ -88,7 +94,14 @@ const _EditRegistrar: React.ForwardRefRenderFunction<ReusableDrawerRef, EditRegi
   },[StatesResults])
 
   const onSubmit = (data: FormData) =>{
-    updateRegistrar(data);
+    updateRegistrar(data)
+    .then((res: any) => {
+      if (res.error) {
+        toast.error(`${res.error.data.title}`, {
+          position: toast.POSITION.TOP_LEFT,
+        });
+      }
+    });
   }
   const hideDrawer = () => {
     if (drawerRef.current) {
@@ -104,12 +117,11 @@ const _EditRegistrar: React.ForwardRefRenderFunction<ReusableDrawerRef, EditRegi
 
   return (
     <>
-      {toggleModal && (
-        <SuccessModal
-          onDoneClicked={() => setToggleModal(!toggleModal)}
-          message="Registrar edited Successfully"
-        />
-      )}
+      <SuccessModal
+        openModal={toggleModal}
+        onDoneClicked={() => setToggleModal(false)}
+        message="Registrar updated Successfully"
+      />
       <ReusableDrawer
         drawerId="edit-registrar-drawer"
         placement="right"

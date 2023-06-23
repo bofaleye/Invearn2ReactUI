@@ -22,7 +22,7 @@ const ForgetPasswordForm: React.FC<ForgetPasswordFormProps> = ({
     email: "",
   };
 
-  // Hooks
+  // Hooksnpm 
   const {
     register,
     handleSubmit,

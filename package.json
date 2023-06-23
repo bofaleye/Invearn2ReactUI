@@ -1,5 +1,5 @@
 {
-  "name": "InvearnUI",
+  "name": "Invearn2UI",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -37,6 +37,7 @@
     "react-redux": "^8.0.5",
     "react-toastify": "^9.1.3",
     "sass": "^1.62.1",
+    "sharp": "^0.32.1",
     "tailwind-merge": "^1.12.0",
     "tailwindcss": "3.3.2",
     "typescript": "5.0.4",

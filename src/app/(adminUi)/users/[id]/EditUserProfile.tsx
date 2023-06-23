@@ -1,135 +1,207 @@
 "use client";
 
-import React from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { MySelect, MyTextInput } from "@/components/FormElements/Inputs";
 import FormButton from "@/components/FormElements/FormButton";
-import ReusableDrawer from "@/components/ReusableDrawer";
+import ReusableDrawer, { ReusableDrawerRef } from "@/components/ReusableDrawer";
+import { newUserSchema } from "../newUserSchema";
+import { IUser } from "@/models/User";
+import { useUpdatUserMutation } from "../UserApiSlice";
+import { useFetchUserRolesQuery } from "../userRolesApiSlice";
+import { UserRole } from "@/models/UserRole";
+import { toast } from "react-toastify";
+import SuccessModal from "@/components/Modals/SuccessModal";
 
-const schema = Yup.object({
-  firstname: Yup.string()
-    .min(3, "Input must be  minimum of 3 characters")
-    .required("First Name field empty"),
-  lastname: Yup.string()
-    .min(3, "Input must be  minimum of 3 characters")
-    .required("Last Name field empty"),
-  middlename: Yup.string()
-    .min(3, "Input must be  minimum of 3 characters")
-    .required("Middle Name field empty"),
-  email: Yup.string().email("Invalid email address").required("Required"),
-  dob: Yup.string().required("Date of birth field empty"),
-  role: Yup.string().oneOf(["admin", "superadmin"]),
-  gender: Yup.string().oneOf(["male", "female"]).required("Gender field empty"),
-});
-type FormData = Yup.InferType<typeof schema>;
+type FormData = Yup.InferType<typeof newUserSchema>;
 
-export default function EditUser() {
+interface EditUserprops {
+  userData: IUser;
+  OnEditComplete: (isSuccess: boolean) => void;
+}
+
+const _EditUser: React.ForwardRefRenderFunction<
+  ReusableDrawerRef,
+  EditUserprops
+> = (props, ref) => {
+  let drawerRef = useRef<ReusableDrawerRef>(null);
+  useImperativeHandle(ref, () => ({
+    hideDrawer,
+    showDrawer,
+  }));
+  const { userData } = props;
+  const Roles = useFetchUserRolesQuery();
+  const [roleOptions, setRoleOptions] = useState<object[]>([]);
+  const [updateUser, response] = useUpdatUserMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(newUserSchema),
   });
-  const onSubmit = (data: FormData) => console.log(data);
-  return (
-    <ReusableDrawer
-      drawerId="edit-user-drawer"
-      placement="right"
-      drawerTitle="Edit User"
-      subTitle="User Information"
-    >
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <MyTextInput
-          label="First Name"
-          type="text"
-          register={register}
-          name="firstname"
-          errors={errors}
-        />
-        <MyTextInput
-          label="Middle Name"
-          name="middlename"
-          type="text"
-          register={register}
-          errors={errors}
-        />
-        <MyTextInput
-          label="Last Name"
-          name="lastname"
-          type="text"
-          register={register}
-          errors={errors}
-        />
-        <MyTextInput
-          label="Email"
-          name="email"
-          type="emai"
-          register={register}
-          errors={errors}
-        />
-        <MyTextInput
-          label="Date of Birth"
-          name="dob"
-          type="date"
-          register={register}
-          errors={errors}
-        />
-        <MySelect
-          label="Gender"
-          name="gender"
-          options={[
-            {
-              name: "Male",
-              value: "male",
-            },
-            {
-              name: "Female",
-              value: "female",
-            },
-          ]}
-          register={register}
-          errors={errors}
-        />
+  const [toggleModal, setToggleModal] = useState(false);
 
-        <MySelect
-          label="User Role"
-          name="role"
-          options={[
-            {
-              name: "Admin",
-              value: "admin",
-            },
-            {
-              name: "Super admin",
-              value: "super admin",
-            },
-          ]}
-          register={register}
-          errors={errors}
-        />
-        <div className="flex col-span-6 sm:col-full space-x-4 mt-4 justify-end">
-          <button
-            data-drawer-hide="edit-user-drawer"
-            aria-controls="edit-user-drawer"
-            className="text-CEMCS-Blue-100 border  w-[25%] border-gray-300 focus:outline-none hover:bg-gray-100  focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            type="button"
-          >
-            Back
-          </button>
-          <FormButton
-            className="text-white bg-green-500 hover:bg-green-600 focus:ring-4 
+  const onSubmit = (data: FormData) => {
+    updateUser({
+      id: userData.id,
+      ...data,
+    }).then((res: any) => {
+      if (res.error) {
+        toast.error(`There was an error during edit, try again`, {
+          position: toast.POSITION.TOP_LEFT,
+        });
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (response?.isSuccess) {
+      hideDrawer();
+      setToggleModal(true);
+      props.OnEditComplete(response?.isSuccess);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [response]);
+
+  useEffect(() => {
+    let options: object[] = [];
+    if (Roles.data) {
+      Roles.data.map((item: UserRole) =>
+        options.push({
+          name: item.name,
+          value: item.id,
+        })
+      );
+    }
+    setRoleOptions(options);
+  }, [Roles.data]);
+  const hideDrawer = () => {
+    if (drawerRef.current) {
+      drawerRef.current.hideDrawer();
+    }
+  };
+
+  const showDrawer = () => {
+    if (drawerRef.current) {
+      drawerRef.current.showDrawer();
+    }
+  };
+  return (
+    <>
+      <SuccessModal
+        openModal={toggleModal}
+        onDoneClicked={() => setToggleModal(false)}
+        message="Registrar updated Successfully"
+      />
+      <ReusableDrawer
+        drawerId="edit-user-drawer"
+        placement="right"
+        drawerTitle="Edit User"
+        subTitle="User Information"
+        ref={drawerRef}
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <MyTextInput
+            defaultValue={userData?.firstname}
+            label="First Name"
+            type="text"
+            register={register}
+            name="firstname"
+            errors={errors}
+          />
+          <MyTextInput
+            defaultValue={userData?.middlename}
+            label="Middle Name"
+            name="middlename"
+            type="text"
+            register={register}
+            errors={errors}
+          />
+          <MyTextInput
+            defaultValue={userData?.lastname}
+            label="Last Name"
+            name="lastname"
+            type="text"
+            register={register}
+            errors={errors}
+          />
+          <MyTextInput
+            defaultValue={userData?.email}
+            label="Email"
+            name="email"
+            type="emai"
+            register={register}
+            errors={errors}
+          />
+          <MyTextInput
+            defaultValue={userData?.dateOfBirth}
+            label="Date of Birth"
+            name="dateOfBirth"
+            type="date"
+            register={register}
+            errors={errors}
+          />
+          <MySelect
+            defaultValue={userData?.gender}
+            label="Gender"
+            name="gender"
+            options={[
+              {
+                name: "Male",
+                value: "male",
+              },
+              {
+                name: "Female",
+                value: "female",
+              },
+            ]}
+            register={register}
+            errors={errors}
+          />
+
+          <MySelect
+            defaultValue={userData?.applicationRoles}
+            label="User Role"
+            name="role"
+            options={roleOptions}
+            register={register}
+            errors={errors}
+          />
+          <div className="flex col-span-6 sm:col-full space-x-4 mt-4 justify-end">
+            <button
+              data-drawer-hide="edit-user-drawer"
+              aria-controls="edit-user-drawer"
+              className="text-CEMCS-Blue-100 border  w-[25%] border-gray-300 focus:outline-none hover:bg-gray-100  focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              type="button"
+            >
+              Back
+            </button>
+
+            <FormButton
+              className="text-white bg-green-500 hover:bg-green-600 focus:ring-4
               w-[25%]
               focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            id="successButton"
-            type="submit"
-          >
-            Save
-          </FormButton>
-        </div>
-      </form>
-    </ReusableDrawer>
+              id="successButton"
+              type="submit"
+              disabled={response.isLoading}
+            >
+              {response.isLoading ? "Saving..." : "Save"}
+            </FormButton>
+          </div>
+        </form>
+      </ReusableDrawer>
+    </>
   );
-}
+};
+
+const EditUser = forwardRef<ReusableDrawerRef, EditUserprops>(_EditUser);
+export default EditUser;

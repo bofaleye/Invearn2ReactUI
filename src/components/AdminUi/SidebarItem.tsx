@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 interface SidebarItemProps {
@@ -8,6 +9,7 @@ interface SidebarItemProps {
   icon: React.ReactNode;
   children?: React.ReactNode;
   url?: string;
+  urls?: string[];
 }
 
 const generateRandomHash = (length: number): string => {
@@ -19,18 +21,29 @@ const generateRandomHash = (length: number): string => {
   return output;
 };
 
-export const SidebarItem: React.FC<SidebarItemProps> = ({ url, children, title, mobileTag, icon, hash = generateRandomHash(7) }) => {
+export const SidebarItem: React.FC<SidebarItemProps> = ({ url, urls, children, title, mobileTag, icon, hash = generateRandomHash(7) }) => {
+  const pathname = usePathname();
 
   const isActiveRoute = (path?: string): boolean => {
-    if (!path) return false;
-    return true;
+    if (path === pathname) return true;
+    return false;
+  }
+
+  const isGroupActiveRoute = (paths?: string[]): boolean => {
+    let res = false;
+    paths?.map((path: string) =>{
+      if (path === pathname) res=true;
+    })
+    return res;
   }
 
   return children ? (
     <li>
       <button
         type="button"
-        className="flex items-center w-full p-2 text-base text-gray-900 font-medium transition duration-75 rounded-lg group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+        className={['flex items-center w-full p-2 text-base text-gray-900 font-medium transition duration-75 rounded-lg group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700',
+          isGroupActiveRoute(urls) ? 'is-active bg-green-100 text-green-800 dark:bg-gray-700' : ''
+        ].join(' ')}
         aria-controls={`${hash}-${mobileTag}`}
         data-collapse-toggle={`${hash}-${mobileTag}`}
       >

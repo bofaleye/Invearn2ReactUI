@@ -46,7 +46,7 @@ const _EditDepartment: React.ForwardRefRenderFunction<ReusableDrawerRef, EditDep
   useEffect(()=>{
     if(response?.isSuccess){
       hideDrawer();
-      setToggleModal(!toggleModal);
+      setToggleModal(true);
       onEditDone(response?.isSuccess);
     }
   },[response])
@@ -65,7 +65,7 @@ const _EditDepartment: React.ForwardRefRenderFunction<ReusableDrawerRef, EditDep
 
   return (
     <>
-    {toggleModal && <SuccessModal onDoneClicked={()=>setToggleModal(!toggleModal)} message="Department edited Successfully" />}
+    {toggleModal && <SuccessModal openModal={toggleModal} onDoneClicked={()=>setToggleModal(!toggleModal)} message="Department edited Successfully" />}
     <ReusableDrawer
       drawerId="edit-department-drawer"
       placement="right"
