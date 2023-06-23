@@ -1,0 +1,26 @@
+name: Build and push to Azure Container Registory
+on: 
+  push:
+    branch: develop
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+        steps:
+        # checkout the repo
+        - name: 'Checkout GitHub Action'
+          uses: actions/checkout@main
+          
+        - name: Login to Azure Container Registory
+          uses: azure/docker-login@v1
+          with:
+            login-server: ${{ secrets.ACR_ENDPOINT }}
+            username: ${{ secrets.ACR_USERNAME }}
+            password: ${{ secrets.ACR_PASSWORD }}
+        
+        - name: 'Build and push image'
+          uses: docker/build-push-action@v2
+          with:
+            push: true
+            tags: ${{ secrets.ACR_ENDPOINT }}/invearnreact-ui-dev:latest
+            file: ./Dockerfile
