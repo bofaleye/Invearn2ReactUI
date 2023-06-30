@@ -57,7 +57,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
       <div className="mb-8 flex justify-center">
         <Image
-          src="/Greenpole-Logo 1.svg" 
+          src="/invearn_logo.svg" 
           alt=""
           width={178}
           height={61}
