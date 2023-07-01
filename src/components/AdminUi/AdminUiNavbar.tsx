@@ -100,7 +100,7 @@ const AdminUiNavbar: React.FC<any> = () => {
               </button>
               <Link href="/" className="flex ml-2">
                 <Image
-                  src="/Greenpole-Logo 1.svg"
+                  src="/invearn_logo.svg"
                   alt="GreenPole Logo"
                   height={35}
                   width={120}
