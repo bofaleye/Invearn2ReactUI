@@ -6,8 +6,8 @@ const getToken = async () => {
   const currentAuth = getCookie(AUTH_KEY)?.toString();
 
   if (currentAuth) {
-    const session = JSON.parse(currentAuth || "");
-    return session?.accessToken;
+    // const session = currentAuth || "";
+    return JSON.parse(currentAuth)?.accessToken || "";
   }
 
   return '';
@@ -16,7 +16,7 @@ const getToken = async () => {
 export const apiSlice = createApi({
   reducerPath: "apiSlice",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://greenpole3-dev-api.azurewebsites.net/api/",
+    baseUrl: "https://invearn2-coreapi-dev.azurewebsites.net/api/",
     prepareHeaders: async (headers, { getState }) => {
       const token = await getToken();
       if (token) {

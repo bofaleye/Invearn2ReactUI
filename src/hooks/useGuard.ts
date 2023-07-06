@@ -14,7 +14,7 @@ export const useGuard = () => {
 
   useEffect(() => {
     if (currentAuth) {
-      setAuth(JSON.parse(currentAuth));
+      setAuth({ accessToken : currentAuth, expiresIn: '3600', refreshToken: 'jkjk'});
     }
     else{
         router.push('/login');
