@@ -59,7 +59,7 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                     <DashboardIcon className="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-green-800 group-[.is-active]:text-green-800 dark:text-gray-400 dark:group-hover:text-white" />
                   }
                 />
-                <SidebarItem
+                {/* <SidebarItem
                   mobileTag={tag}
                   title="App Management"
                   urls={[APP_ROUTES.registrar, "/users"]}
@@ -117,7 +117,7 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                       Access Control
                     </Link>
                   </li>
-                </SidebarItem>
+                </SidebarItem> */}
                 <SidebarItem
                   mobileTag={tag}
                   title="Master Data"

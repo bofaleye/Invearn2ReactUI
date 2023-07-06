@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { setCookie } from "cookies-next";
 import { AUTH_KEY } from "@/constants/cookieKeys";
 import { useLoginMutation } from "./login/loginApiSlice";
+import Firebase from "../../firebase.config";
 
 const LoginPage: NextPage<any> = () => {
   // RTK
@@ -18,33 +19,26 @@ const LoginPage: NextPage<any> = () => {
   const router = useRouter();
 
   // Handlers
-  const handleSubmit = (state: LoginFormState) => {
-    login(state)
-      .then((res: any) => {
-        if (res.error) {
-          toast.error(
-            res.error?.data?.message || "An error occured while signing you in",
-            {
-              position: toast.POSITION.TOP_CENTER,
-            }
-          );
-        } else {
-          // Set auth
-          let cookieExpiration = res.data?.payload.expiresIn
-            ? new Date(res.data?.payload.expiresIn)
-            : undefined;
-          setCookie(AUTH_KEY, JSON.stringify(res.data?.payload), {
-            expires: cookieExpiration,
-          });
-          router.push("/dashboard");
-        }
-      })
-      .catch((err) => {
+  const handleSubmit = async (state: LoginFormState) => {
+    try{
+     const { email, password } = state;
+     const userCredential = await Firebase.auth().signInWithEmailAndPassword(email, password);
+     const user = userCredential.user;
+     const userToken = await user?.getIdToken();
+    //  const tokenExpirationTime = user?.stsTokenManager.expirationTime;
+     // let accessToken = userCred.user?.multiFactor?.user?.accessToken
+      // let cookieExpiration = res.data?.payload.expiresIn
+      //       ? new Date(res.data?.payload.expiresIn)
+      //       : undefined;
+      let obj={ accessToken: userToken}
+          setCookie(AUTH_KEY, JSON.stringify(obj));
+         router.push("/dashboard");
+     }catch (err) {
         toast.error("An error occured while signing you in", {
           position: toast.POSITION.TOP_CENTER,
         });
-      });
-  };
+      };
+  }
   const onRememberMe = (checked: boolean) => {
     alert(`Remember me is: ${checked}`);
   };

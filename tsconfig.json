@@ -35,7 +35,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "build/types/**/*.ts"
-  ],
+, "firebase.config.js"  ],
   "exclude": [
     "node_modules"
   ]
