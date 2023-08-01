@@ -2,7 +2,7 @@
 
 // import { UploadFileIcon } from '@/assets';
 import React, { FC, useEffect, useState } from "react";
-import AppButton from "../Button";
+import Button from "../Button";
 import { UploadFileIcon } from "@/assets";
 interface ProfileInfoData {
   RegistrarName: string;
@@ -50,10 +50,9 @@ const ProfileInfo: FC<ProfileInfoData> = (
           <h2 className="font-bold text-xl">{profileInfo?.RegistrarName}</h2>
         </div>
         <div className="mb-4">
-          <AppButton
-            text="Edit Profile"
+          <Button
             appButtonType="deep-green"
-            buttonClick={()=> {
+            onClick={()=> {
               if(profileInfo?.handleEdit){
                 profileInfo?.handleEdit();
               }
@@ -62,7 +61,7 @@ const ProfileInfo: FC<ProfileInfoData> = (
             data-drawer-show="edit-user-drawer"
             data-drawer-placement="right"
             aria-controls="edit-user-drawer"
-          />
+          >Edit Profile</Button>
         </div>
       </div>
 

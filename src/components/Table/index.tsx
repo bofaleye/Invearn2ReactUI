@@ -27,7 +27,6 @@ const Table: React.FC<TableProps> = ({
   const [pages, setPages] = useState<number>(0);
   const [activeIndex, setActiveIndex] = useState<number>(1);
   const [canExpand, setCanExpand] = useState<boolean>(false);
-  
   useEffect(() => {
     const temp = columns.filter((row: any) => {
       let found = true;
