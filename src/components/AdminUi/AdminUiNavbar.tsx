@@ -40,7 +40,7 @@ const AdminUiNavbar: React.FC<any> = () => {
 
   const logout = ()=>{
     deleteCookie(AUTH_KEY);
-    router.push('/login');
+    router.push('/');
   }
 
   // Mobile drawer

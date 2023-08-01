@@ -12,6 +12,8 @@ export interface ITableColumn {
   key: string;
   sort?: boolean;
   sortState?: TableSortState;
+  search?: boolean;
+  display?: boolean;
 }
 
 export class ITableData<T = any> {

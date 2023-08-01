@@ -1,4 +1,7 @@
 'use client';
+
+import React from "react";
+
 interface AppSkeletonProps{
     type: 'card'| 'table' | 'in-table';
     colspan? : number;

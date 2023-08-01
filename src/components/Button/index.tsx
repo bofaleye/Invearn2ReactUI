@@ -1,9 +1,9 @@
 "use client";
 import { Spinner } from "flowbite-react";
-import React, { ReactElement, ReactNode} from "react";
+import { twMerge } from "tailwind-merge";
+import React, { ReactNode } from "react";
 
-interface ButtonProps {
-  text: string;
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   appButtonType:
     | "green-outline"
     | "red-outline"
@@ -12,32 +12,25 @@ interface ButtonProps {
     | "deep-green"
     | "light-green"
     | "grey-button";
-  type?: "button" | "submit";
   height?: "default" | "small";
-  buttonClick: any;
-  disabled?: boolean;
   isIcon?: boolean;
-  buttonWidth?: string;
-  id?: string;
   props?: any;
   icon?: ReactNode;
-  isLoading?:boolean
+  isLoading?: boolean;
 }
 
-const AppButton: React.FC<ButtonProps> = ({
-  text,
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({
+  isLoading = false,
   appButtonType,
-  buttonClick,
-  disabled,
   height = "default",
   isIcon = false,
-  buttonWidth,
-  type = "button",
   icon = <></>,
-  isLoading = false,
-  ...props
-}: ButtonProps) => {
+  children,
+  className,
+  ...rest
+}, ref) => {
   let colorCss = "";
+
   switch (appButtonType) {
     case "green-outline":
       colorCss =
@@ -68,6 +61,7 @@ const AppButton: React.FC<ButtonProps> = ({
   }
 
   let heightCss = "";
+
   switch (height) {
     case "default":
       heightCss = "px-5 py-2.5";
@@ -76,20 +70,25 @@ const AppButton: React.FC<ButtonProps> = ({
       heightCss = "px-3 py-2";
       break;
   }
+
   return (
     <button
-      type={type}
-      disabled={disabled}
-      onClick={buttonClick}
-      {...props}
-      className={`${buttonWidth}${
-        isIcon ? "w-full md:w-auto flex items-center justify-center " : ""
-      } ${heightCss} ${colorCss}focus:ring-primary-300 font-medium rounded-lg text-sm text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800`}
-    >
-      {isLoading ? <Spinner className="mr-1" />: isIcon && icon}
-      {text}
+      className={twMerge(
+      "focus:ring-primary-300 font-medium rounded-lg text-sm text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 whitespace-nowrap",
+      isIcon && "w-full md:w-auto flex items-center justify-center",
+      heightCss,
+      colorCss,
+      className
+      )}
+      {...rest}
+      ref={ref}>
+      {isLoading ? <Spinner className="mr-1" /> : isIcon && icon}
+      {children}
     </button>
   );
-};
+  }
+);
+Button.displayName = 'Button'
 
-export default AppButton;
+
+export default Button;

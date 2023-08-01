@@ -1,11 +1,25 @@
-'use client'
+"use client";
 
+import React from "react";
 import { DashboardIcon, PlusIcon } from "@/assets";
 import { Breadcrumb } from "flowbite-react";
-import { BanksTable } from "@/components/Table/Banks";
 import SuccessModal from "@/components/Modals/SuccessModal";
+import BanksTable from "./BanksTable";
+import { useFetchBanksQuery } from "./bankApiSlice";
+import { useState } from "react";
+import Button from "../../../components/Button";
+import CreateBankDrawer from "./CreateBankDrawer";
 
 export const Banks: React.FC = () => {
+  const { data, refetch, isFetching } = useFetchBanksQuery();
+  const [openCreateSuccessModal, setOpenCreateSuccessModal] = useState(false);
+  const [createDrawerOpen, setCreateDrawerOpen] = useState(false);
+
+  const onCreateSuccess = () => {
+    refetch();
+    setOpenCreateSuccessModal(true);
+  };
+
   return (
     <div className="px-8 pt-6 pb-10">
       <div className="mb-4">
@@ -20,13 +34,23 @@ export const Banks: React.FC = () => {
       <div className="shadow bg-white sm:rounded-lg">
         <div className="py-4 pr-8 pl-4 flex w-full items-center font-semibold justify-between">
           <h1 className="text-lg font-semibold text-gray-900">All Banks</h1>
-          <button className="inline-flex items-center w-max py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-green-500 hover:bg-green-700 focus:ring-4 focus:ring-primary-300 sm:ml-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-            <PlusIcon className="h-8 w-8" />
+          <Button
+            isIcon={true}
+            icon={<PlusIcon className="h-[1rem] w-[1rem] mr-2" />}
+            appButtonType="green-button"
+            height="small"
+            onClick={()=>setCreateDrawerOpen(true)}
+          >
             Add New Bank
-          </button>
+          </Button>
         </div>
-        <BanksTable />
+        <BanksTable dataLoading={isFetching} data={data} refetch={refetch} openCreateModal={() => setCreateDrawerOpen(true)}  />
       </div>
+      <CreateBankDrawer
+            open={createDrawerOpen}
+            setOpen={setCreateDrawerOpen}
+            onCreateSuccess={onCreateSuccess}
+          />
     </div>
   );
-}
+};

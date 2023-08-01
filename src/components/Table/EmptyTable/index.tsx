@@ -2,7 +2,7 @@
 
 import { NoDataIcon, PlusIcon } from "@/assets";
 import React from "react";
-import AppButton from "../../Button";
+import Button from "../../Button";
 
 export interface EmptyTableProps {
   buttonText: string;
@@ -35,14 +35,13 @@ const EmptyTable: React.FC<EmptyTableProps> = ({
             {`To add a ${bodyText}, simply click the "${buttonText.toLowerCase()}"`}{" "}
             <b /> button below.
           </p>
-          <AppButton
-            buttonClick={buttonMethod}
+          <Button
+            onClick={buttonMethod}
             {...buttonProps}
-            text={buttonText}
             icon={<PlusIcon className="h-4" />}
             isIcon={true}
             appButtonType="deep-green"
-          />
+          >{buttonText}</Button>
         </div>
       );
     case "in-table":
@@ -61,14 +60,13 @@ const EmptyTable: React.FC<EmptyTableProps> = ({
                   {`To add a ${bodyText}, simply click the "${buttonText.toLowerCase()}"`}{" "}
                   <b /> button below.
                 </p>
-                <AppButton
-                  buttonClick={buttonMethod}
+                <Button
+                  onClick={buttonMethod}
                   {...buttonProps}
-                  text={buttonText}
                   icon={<PlusIcon className="h-4" />}
                   isIcon={true}
                   appButtonType="deep-green"
-                />
+                >{buttonText}</Button>
               </div>
             </td>
           </tr>

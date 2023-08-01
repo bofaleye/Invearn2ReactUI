@@ -9,10 +9,11 @@ import { Modal, Select } from "flowbite-react";
 import Table from "@/components/Table";
 import { IUsersTableProps } from "@/models/User";
 import { RiErrorWarningLine } from "react-icons/ri";
-import AppButton from "@/components/Button";
+import Button from "@/components/Button";
 import { useDeleteUserMutation } from "./UserApiSlice";
 import SuccessModal from "@/components/Modals/SuccessModal";
 import { toast } from "react-toastify";
+import React from "react";
 
 const PromptModal = (
   bodyText: string,
@@ -30,21 +31,18 @@ const PromptModal = (
           </p>
           <p>{bodyText}</p>
           <div className=" w-full flex justify-between mt-4 mb-4">
-            <AppButton
-              text="Cancel"
+            <Button
               appButtonType="grey-button"
-              buttonWidth="w-[45%]"
-              buttonClick={onClose}
-            />
-
-            <AppButton
+              className="w-[45%]"
+              onClick={onClose}
+            >Cancel</Button>
+            <Button
               isLoading={doneBtnBusy}
               disabled={doneBtnBusy}
-              text="Yes, Delete"
               appButtonType="red-button"
-              buttonWidth="w-[45%]"
-              buttonClick={onDone}
-            />
+              className="w-[45%]"
+              onClick={onDone}
+            > Yes, Delete</Button>
           </div>
         </div>
       </Modal.Body>
