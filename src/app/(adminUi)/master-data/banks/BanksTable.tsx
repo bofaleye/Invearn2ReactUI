@@ -17,9 +17,9 @@ import { useDeleteBankMutation } from "./bankApiSlice";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { Spinner, Modal } from "flowbite-react";
 import TableAction, { TableActionItem } from "@/components/Table/TableAction";
-import AppSkeleton from "../../../components/Skeleton";
-import PromptModal from "../../../components/Modals/PromptModal";
-import { GpToast } from "../../../components/Toast";
+import AppSkeleton from "../../../../components/Skeleton";
+import PromptModal from "../../../../components/Modals/PromptModal";
+import { GpToast } from "../../../../components/Toast";
 import { toast } from "react-toastify";
 
 const tableExportFileName = "banks";
