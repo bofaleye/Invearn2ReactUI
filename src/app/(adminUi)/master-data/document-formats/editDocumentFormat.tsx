@@ -68,6 +68,7 @@ const EditDocumentDrawer =  ({item, onEditComplete, showModal, setShowModal}: Ed
         title="Edit Document Format"
         closable={false}
         isOpen={showModal}
+        onClose={()=>{ }}
         // subTitle="Document Format Information"
       >
         <form

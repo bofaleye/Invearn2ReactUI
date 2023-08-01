@@ -184,6 +184,7 @@ export const DocumentFormats: React.FC = () => {
             Add Document Format
           </Button>
           <PromptModal
+            headingText=""
             bodyText="Are you sure you want to delete this Document Format?"
             // bodyText=""
             isOpen={showDeleteModal}
