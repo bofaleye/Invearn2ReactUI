@@ -10,8 +10,8 @@ import { TextInput } from "@/components/FormElements/Inputs";
 // import { Drawer } from "@/components/Drawer";
 import * as Yup from "yup";
 import Button from "@/components/Button";
-import Drawer from "../../../components/Drawer";
-import { GpToast } from "../../../components/Toast";
+import Drawer from "../../../../components/Drawer";
+import { GpToast } from "../../../../components/Toast";
 
 const schema = Yup.object({
   name: Yup.string().required("Bank Name is required."),

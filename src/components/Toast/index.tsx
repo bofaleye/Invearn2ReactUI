@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 interface ToastProps {
-  type: string;
+  type: "success" | "error";
   message: string;
   placement: any;
 }

@@ -7,7 +7,7 @@ import SuccessModal from "@/components/Modals/SuccessModal";
 import BanksTable from "./BanksTable";
 import { useFetchBanksQuery } from "./bankApiSlice";
 import { useState } from "react";
-import Button from "../../../components/Button";
+import Button from "../../../../components/Button";
 import CreateBankDrawer from "./CreateBankDrawer";
 
 export const Banks: React.FC = () => {
