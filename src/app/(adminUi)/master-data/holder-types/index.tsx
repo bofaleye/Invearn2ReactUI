@@ -106,7 +106,7 @@ export default function ShareHolderType(): React.ReactElement {
 
   if(isError){
     console.log('error', error);
-    GpToast({ type: 'error', message: error?.error || "Something happened",
+    GpToast({ type: 'error', message: (error as any)?.error || "Something happened",
     placement : toast.POSITION.TOP_RIGHT})
   }
   // eslint-disable-next-line react-hooks/exhaustive-deps
