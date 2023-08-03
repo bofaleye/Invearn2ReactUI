@@ -1,37 +1,38 @@
-"use client";
+'use client'
 
-import React, { useMemo } from "react";
-import { DashboardIcon, PlusIcon, Edit, Delete, SearchIcon } from "@/assets";
-import { Breadcrumb, Modal } from "flowbite-react";
-import { useEffect, useRef, useState } from "react";
-import TableAction, { TableActionItem } from "@/components/Table/TableAction";
-import {
-  useDeleteDocumentFormatMutation,
-  useFetchDocumentFormatsQuery,
-} from "./documentFormatApiSlice";
-import { RiErrorWarningLine } from "react-icons/ri";
-import { IDocumentFormat } from "@/models/document-format";
+import React, { useEffect, useMemo, useState } from "react";
+import { DashboardIcon, PlusIcon, SearchIcon, Edit, Delete } from "@/assets";
 import Button from "@/components/Button";
-// import CreateDrawer from "./create-drawer";
-// import EditDrawer from "./edit-drawer";
-import PromptModal from "@/components/Modals/PromptModal";
+import { Breadcrumb, Modal } from "flowbite-react";
+import { useFetchShareHolderTypesQuery, useDeleteShareHolderTypeMutation } from "./holderApiSlice";
+// import SuccessModal from "@/components/Modals/SuccessModal";
+import CreateHolderTypeDrawer from "./createHolderTypeDrawer";
+import TableAction, { TableActionItem } from "@/components/Table/TableAction";
 import { ITableColumn } from "@/components/Table/model";
-import Table from "../../../../components/Table";
-import { CreateDocumentFormatDrawer } from "./createDocumentFormat";
-import AppSkeleton from "../../../../components/Skeleton";
+import { IShareHolderType } from "@/models/shareholder-type";
+import AppSkeleton from "@/components/Skeleton";
+import EditHolderTypeDrawer from "./editHolderType";
+import PromptModal from "@/components/Modals/PromptModal";
+import Table from "@/components/Table";
 import { GpToast } from "../../../../components/Toast";
 import { toast } from "react-toastify";
-import EditDocumentDrawer from "./editDocumentFormat";
 
-const tableExportFileName = "documets";
+const tableExportFileName = "shareholder-types";
 export const tableColumns: ITableColumn[] = [
   {
     dataIndex: "name",
     title: "Name",
     key: "name",
     sort: true,
-    search: true,
+    search: true
   },
+  // {
+  //   dataIndex: "caption",
+  //   title: "Caption",
+  //   key: "caption",
+  //   sort: true,
+  //   search: true
+  // },
   {
     dataIndex: "description",
     title: "Description",
@@ -40,79 +41,78 @@ export const tableColumns: ITableColumn[] = [
     search: true,
   },
   {
-    dataIndex: "contentType",
-    title: "Content Type",
-    key: "contentType",
-    sort: true,
-    search: true,
-  },
-  {
-    title: "Action",
+    title: "Action",     
     dataIndex: "option",
     key: "option",
   },
 ];
 
-export const DocumentFormats: React.FC = () => {
-  const { data, refetch, isFetching } = useFetchDocumentFormatsQuery();
-  const [itemList, setItemList] = useState<IDocumentFormat[]>([]);
-  const [activeItem, setActiveItem] = useState<IDocumentFormat>();
-  const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-
-  const [deleteBank, deleteResponse] = useDeleteDocumentFormatMutation();
-
-  const { isLoading: deleteIsLoading, isSuccess: deletedSuccess } =
-    deleteResponse;
-
-  const entityNameSingular = "Document Format";
-  const [columns, setColumns] = useState<ITableColumn[]>([]);
+export default function ShareHolderType(): React.ReactElement {
   const [page, setPage] = useState<number>(1);
-
-  useEffect(() => {
-    setColumns(tableColumns);
-  }, []);
-
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTableData, setFilteredTableData] = useState(data);
+  const { data, refetch, isFetching } = useFetchShareHolderTypesQuery();
+  const [deleteBank, { isLoading, isSuccess, isError, error }] = useDeleteShareHolderTypeMutation();
 
-  useEffect(() => {
-    setFilteredTableData(
-      data?.filter((row: any) => {
-        let found = true;
-        for (let i = 0; i < columns.length; i++) {
-          if (searchTerm.trim().length && columns[i].search) {
-            found = row[columns[i].dataIndex]
-              ?.toString()
-              ?.toLowerCase()
-              ?.includes(searchTerm.toLowerCase());
-          }
+  
+  const [createDrawerOpen, setCreateDrawerOpen] = useState(false);
+  const [editDrawerOpen, setEditDrawerOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const [filteredTableData, setFilteredTableData] = useState(data ?? []);
+
+  const [selectedItem, setSelectedItem]= useState<IShareHolderType>()
+
+  const entityNameSingular = "Shareholder type";
+
+  React.useEffect(() => {
+    if (!data?.length) return;
+    setFilteredTableData(data.filter((row: any) => {
+      let found = true;
+
+      for (let i = 0; i < tableColumns.length; i++) {
+        if (searchTerm.trim().length && tableColumns[i].search) {
+          found = row[tableColumns[i].dataIndex]?.toString()?.toLowerCase()?.includes(searchTerm.toLowerCase())
         }
-        return found;
-      })
-    );
-  }, [columns, data, searchTerm]);
+      }
+
+      return found;
+    }));
+  }, [data, searchTerm]);
 
   const tableAction: TableActionItem[] = [
     {
-      text: "Edit Department",
+      text: "Edit Shareholder type",
       icon: <Edit className="mr-3" />,
       disabled: false,
       visible: true,
-      action: ()=>setShowEditModal(true),
+      action: ()=>setEditDrawerOpen(true),
     },
     {
       text: "Delete",
       icon: <Delete className="mr-3" />,
       disabled: false,
       visible: true,
-      action: ()=>setShowDeleteModal(true),
+      action: ()=>setDeleteModalOpen(true),
     },
   ];
 
-  const dataSource = useMemo(() => {
+  useEffect(()=>{
+  if(isSuccess){
+    setDeleteModalOpen(false)
+    GpToast({ type: 'success', message: "Shareholder type deleted successfully",
+    placement : toast.POSITION.TOP_RIGHT})
+  }
+
+  if(isError){
+    console.log('error', error);
+    GpToast({ type: 'error', message: error?.error || "Something happened",
+    placement : toast.POSITION.TOP_RIGHT})
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[isSuccess, isError])
+
+  const dataSource = useMemo(()=>{
     return filteredTableData?.map((row: any, index: number) => {
       return {
         uid: row.id,
@@ -120,41 +120,20 @@ export const DocumentFormats: React.FC = () => {
         name: row.name,
         description: row.description,
         contentType: row.contentType,
-        option: (
-          <TableAction
-            index={row.id}
-            actionItems={tableAction}
-            onDropShow={() => setActiveItem(row)}
-          />
-        ),
+        option: <TableAction index={row.id}
+                            actionItems={tableAction}
+                            onDropShow={() => setSelectedItem(row)}/>,
       };
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filteredTableData, activeItem]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[filteredTableData, selectedItem]) 
 
-  const handleEditDrawer = (data: IDocumentFormat) => {
-    setActiveItem(data);
-    // editDrawerRef.current?.showDrawer();
-  };
-
-  const handleDeleteModal = () => {
-    setShowDeleteModal(!showDeleteModal);
-  };
-
-  useEffect(() => {
-    if (data?.length) setItemList(data);
-  }, [data]);
-
-  useEffect(() => {
-    if (deletedSuccess) {
-      GpToast({ type : 'success', message: 'Document Format deleted successfully', placement: toast.POSITION.TOP_RIGHT})
-      setShowDeleteModal(false);
-      refetch();
-    }
-  }, [deletedSuccess, refetch]);
+  const onCreateSuccess = () => {
+    refetch()
+  }
 
   const handleDelete = () => {
-    deleteBank(activeItem?.id || "");
+    deleteBank(selectedItem?.id || "");
   };
 
   return (
@@ -164,27 +143,25 @@ export const DocumentFormats: React.FC = () => {
           <Breadcrumb.Item href="#" icon={DashboardIcon}>
             <p>Master Data</p>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>Document Formats</Breadcrumb.Item>
+          <Breadcrumb.Item>Shareholder Types</Breadcrumb.Item>
         </Breadcrumb>
       </div>
       {/* <SuccessModal /> */}
       <div className="shadow bg-white sm:rounded-lg">
         <div className="py-4 pr-8 pl-4 flex w-full items-center font-semibold justify-between">
           <h1 className="text-lg font-semibold text-gray-900">
-            All Document Formats
+            All Shareholder Types
           </h1>
           <Button
-            aria-controls="create-registrar-drawer"
+            onClick={()=>setCreateDrawerOpen(true)}
             isIcon={true}
-            icon={<PlusIcon className="h-4 w-4" />}
+            icon={<PlusIcon className="h-[1rem] w-[1rem] mr-2" />}
             appButtonType="green-button"
-            onClick={() => setShowCreateModal(true)}
             height="small"
           >
-            Add Document Format
+            Add Shareholder Type
           </Button>
         </div>
-        
         <div className="px-3">
           <div className="pb-4 pr-8 pl-4 flex w-full items-center justify-between sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
             <div className="w-3/4">
@@ -198,7 +175,7 @@ export const DocumentFormats: React.FC = () => {
                     id="table-search"
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="block p-2.5 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Search for document formats"
+                    placeholder="Search for shareholder types"
                   />
                 </div>
               </div>
@@ -238,15 +215,15 @@ export const DocumentFormats: React.FC = () => {
                 emptyTableProps={{
                   buttonProps: {
                     "data-drawer-placement": "right",
-                    "aria-controls": "create-document-format-drawer",
-                  },
-                  buttonMethod: () => {
-                    setShowCreateModal(true);
+                    "aria-controls": "create-registrar-drawer",
                   },
                   bodyText: `new ${entityNameSingular}`,
                   buttonText: `Add ${entityNameSingular}`,
+                  buttonMethod: () => {
+                    setCreateDrawerOpen(true);
+                  },
                 }}
-                columns={columns}
+                columns={tableColumns}
                 dataSource={dataSource ?? []}
                 showPagination={true}
                 showPageSize={true}
@@ -269,32 +246,29 @@ export const DocumentFormats: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-      <CreateDocumentFormatDrawer
-        showModal={showCreateModal}
-        setModalOpen={setShowCreateModal}
-        onCreateComplete={() => {
-          refetch();
-        }}
+
+        <CreateHolderTypeDrawer
+          showModal={createDrawerOpen}
+          setOpen={setCreateDrawerOpen}
+          onCreateSuccess={onCreateSuccess}
         />
-      {showEditModal && <EditDocumentDrawer
-         item={activeItem}
-         onEditComplete={()=>{
-           refetch()
-         }}
-         showModal={showEditModal}
-         setShowModal={setShowEditModal}
-      />}
-        <PromptModal
-            headingText=""
-            bodyText="Are you sure you want to delete this Document Format?"
-            // bodyText=""
-            isOpen={showDeleteModal}
-            onClose={()=>{}}
-            OnConfirm={handleDelete}
-            actionLoading={deleteIsLoading}
-            setOpen={()=>setShowDeleteModal(false)}
-          />
+      </div>
+      {editDrawerOpen && (
+        <EditHolderTypeDrawer
+          data={selectedItem}
+          onEditSuccess={() => refetch()}
+          showModal={editDrawerOpen}
+          setOpen={setEditDrawerOpen}
+        />
+      )}
+      <PromptModal
+        headingText={""}
+        bodyText={"Are you sure you want to delete this share-holder type?"}
+        isOpen={deleteModalOpen}
+        setOpen={() => setDeleteModalOpen(false)}
+        OnConfirm={handleDelete}
+        actionLoading={isLoading}
+      />
     </div>
   );
-};
+}
