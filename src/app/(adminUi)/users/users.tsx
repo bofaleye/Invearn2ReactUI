@@ -44,6 +44,8 @@ export default function Users() {
     setUsersData(data || []);
   }, [data]);
 
+ 
+
   return (
     <div className="px-4 pt-6 pb-10 ">
       <BreadCrumbs

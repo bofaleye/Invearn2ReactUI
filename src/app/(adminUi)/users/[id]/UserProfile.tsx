@@ -104,7 +104,7 @@ export default function UserProfile({
           RegistrarName={`${userData?.firstname} ${userData?.lastname}` || ""}
           EmailAddress={`${userData?.email}` || ""}
           OfficeAddress={
-            userData?.organisation.address || "222B Palmgrove Ikorodu Rd"
+            userData?.organisation?.address || "222B Palmgrove Ikorodu Rd"
           }
           PhoneNumber={"08098123456"}
           UserType={"User"}
