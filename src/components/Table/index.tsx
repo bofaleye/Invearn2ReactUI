@@ -78,7 +78,7 @@ const Table: React.FC<TableProps> = ({
     } else {
       _setDataSource(
         _dataSource.sort((a, b) =>
-          a[column.dataIndex].toString() < b[column.dataIndex].toString()
+          a[column.dataIndex]?.toString() < b[column.dataIndex].toString()
             ? 1
             : -1
         )
