@@ -20,25 +20,28 @@ const LoginPage: NextPage<any> = () => {
 
   // Handlers
   const handleSubmit = async (state: LoginFormState) => {
-    try{
-     const { email, password } = state;
-     const userCredential = await Firebase.auth().signInWithEmailAndPassword(email, password);
-     const user = userCredential.user;
-     const userToken = await user?.getIdToken();
-    //  const tokenExpirationTime = user?.stsTokenManager.expirationTime;
-     // let accessToken = userCred.user?.multiFactor?.user?.accessToken
+    try {
+      const { email, password } = state;
+      const userCredential = await Firebase.auth().signInWithEmailAndPassword(
+        email,
+        password
+      );
+      const user = userCredential.user;
+      const userToken = await user?.getIdToken();
+      //  const tokenExpirationTime = user?.stsTokenManager.expirationTime;
+      // let accessToken = userCred.user?.multiFactor?.user?.accessToken
       // let cookieExpiration = res.data?.payload.expiresIn
       //       ? new Date(res.data?.payload.expiresIn)
       //       : undefined;
-      let obj={ accessToken: userToken}
-          setCookie(AUTH_KEY, JSON.stringify(obj));
-         router.push("/dashboard");
-     }catch (err) {
-        toast.error("An error occured while signing you in", {
-          position: toast.POSITION.TOP_CENTER,
-        });
-      };
-  }
+      let obj = { accessToken: userToken };
+      setCookie(AUTH_KEY, JSON.stringify(obj));
+      router.push("/dashboard");
+    } catch (err) {
+      toast.error("An error occured while signing you in: " + err, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
+  };
   const onRememberMe = (checked: boolean) => {
     alert(`Remember me is: ${checked}`);
   };
