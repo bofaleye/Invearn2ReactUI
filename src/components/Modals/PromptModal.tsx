@@ -1,40 +1,51 @@
 "use cleint";
 
-import { Modal } from "flowbite-react";
+import { Modal, Spinner } from "flowbite-react";
 import { RiErrorWarningLine } from "react-icons/ri";
-import AppButton from "../Button";
+import Button from "../Button";
 import { useState } from "react";
+import React from "react";
 
-export default function PromptModal({}) {
-  const [openPromptModal, setOpenPromptModal] = useState(false);
+interface PromptModalProps {
+  headingText: string;
+  bodyText: string;
+  isOpen: boolean;
+  onClose?: () => void;
+  setOpen: () => void;
+  OnConfirm: () => void;
+  actionLoading: boolean;
+}
+
+export default function PromptModal({ bodyText, headingText, setOpen, onClose, isOpen, OnConfirm, actionLoading}: PromptModalProps) {
+  
   return (
     <Modal
       size="sm"
       dismissible
       popup
-      show={openPromptModal}
-      onClose={() => setOpenPromptModal(!openPromptModal)}
+      show={isOpen}
+      onClose={onClose}
     >
-      <Modal.Body className="h-[300px] p-4 flex  items-center justify-center">
+      <Modal.Body className="h-[300px] mt-4 p-4 flex  items-center justify-center">
         <div className=" flex flex-col justify-around items-center text-center">
           <p>
             <RiErrorWarningLine color="red" />
           </p>
-          <p>Are you sure you want to delete this user?</p>
+          {/* <p className="font-medium text-lg mt-4 text-black">{headingText}</p> */}
+          <p>{bodyText}</p>
           <div className=" w-full flex justify-between mt-4 mb-4">
-            <AppButton
-              text="Cancel"
+            <Button
               appButtonType="grey-button"
-              buttonWidth="w-[45%]"
-              buttonClick={() => setOpenPromptModal(!openPromptModal)}
-            />
-
-            <AppButton
-              text="Yes, Delete"
-              appButtonType="red-button"
-              buttonWidth="w-[45%]"
-              buttonClick={() => setOpenPromptModal(!openPromptModal)}
-            />
+              className="w-[45%]"
+              disabled={actionLoading}
+              onClick={setOpen}>Cancel</Button>
+        
+            <Button
+                appButtonType="red-button"
+                className="w-[45%]"
+                onClick={OnConfirm}
+                disabled={actionLoading}
+              >{actionLoading && <Spinner color="danger" className="mr-1 w-[1rem] h-[1rem]" />}Yes, Delete</Button>
           </div>
         </div>
       </Modal.Body>

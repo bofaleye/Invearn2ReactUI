@@ -2,7 +2,7 @@
 
 import { Modal } from "flowbite-react";
 import React from "react";
-import AppButton from "../Button";
+import Button from "../Button";
 
 export interface SuccessModalProps {
   message?: string;
@@ -56,13 +56,12 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
               {message}
             </p>
 
-            <AppButton
+            <Button
               appButtonType="deep-green"
-              text="Done"
-              buttonWidth="w-[50%]"
-              buttonClick={onDoneClicked}
+              className="w-[50%]"
+              onClick={onDoneClicked}
               type="button"
-            />
+            >Done</Button>
             {/* <button
               onClick={onDoneClicked}
                 type="submit"

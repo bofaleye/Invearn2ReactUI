@@ -9,10 +9,11 @@ import { Modal, Select } from "flowbite-react";
 import Table from "@/components/Table";
 import { IUsersTableProps } from "@/models/User";
 import { RiErrorWarningLine } from "react-icons/ri";
-import AppButton from "@/components/Button";
+import Button from "@/components/Button";
 import { useDeleteUserMutation } from "./UserApiSlice";
 import SuccessModal from "@/components/Modals/SuccessModal";
 import { toast } from "react-toastify";
+
 
 const PromptModal = (
   bodyText: string,
@@ -30,21 +31,18 @@ const PromptModal = (
           </p>
           <p>{bodyText}</p>
           <div className=" w-full flex justify-between mt-4 mb-4">
-            <AppButton
-              text="Cancel"
+            <Button
               appButtonType="grey-button"
-              buttonWidth="w-[45%]"
-              buttonClick={onClose}
-            />
-
-            <AppButton
+              className="w-[45%]"
+              onClick={onClose}
+            >Cancel</Button>
+            <Button
               isLoading={doneBtnBusy}
               disabled={doneBtnBusy}
-              text="Yes, Delete"
               appButtonType="red-button"
-              buttonWidth="w-[45%]"
-              buttonClick={onDone}
-            />
+              className="w-[45%]"
+              onClick={onDone}
+            > Yes, Delete</Button>
           </div>
         </div>
       </Modal.Body>
@@ -95,18 +93,22 @@ const UsersTable: React.FC<IUsersTableProps> = ({
     setColumns(usersTableColumns);
   }, []);
 
-  const [filteredTableData, setFilteredTableData] = useState(data);
+  const [filteredTableData, setFilteredTableData] = useState(data?.items);
 
   useEffect(() => {
-    setFilteredTableData(data);
+    setFilteredTableData(data?.items);
   }, [data]);
 
+  
+
   useEffect(() => {
-    setVisibilities(() => filteredTableData.map((x: any) => false));
+    // if(data?.items?.length > 0){
+      setVisibilities(() => filteredTableData?.map((x: any) => false));
+  
   }, [filteredTableData]);
 
   const [visibilities, setVisibilities] = useState(() =>
-    filteredTableData.map((x: any) => false)
+    filteredTableData?.map((x: any) => false)
   );
 
   const handleClick = (index: number) => {
@@ -120,6 +122,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({
     setVisibilities(newVisibilities);
   };
 
+
   const dataSource: ITableData[] =
     filteredTableData && filteredTableData.length > 0
       ? filteredTableData.map((row: any, index: number) => {
@@ -130,16 +133,16 @@ const UsersTable: React.FC<IUsersTableProps> = ({
               <div className="flex items-center text-gray-900 text-base font-medium">
                 <div className="relative inline-flex items-center justify-center w-8 h-8 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
                   <span className="font-medium text-gray-600 dark:text-gray-300">
-                    {getInitials(row.firstname)} {getInitials(row.lastname)}
+                    {getInitials(row.name)}
                   </span>
                 </div>
-                <div className="ml-2">{`${row.firstname} ${row.lastname}`}</div>
+                <div className="ml-2">{`${row.name}`}</div>
               </div>
             ),
             email: row.email,
-            currency: row.organisation.currency,
-            company: row.organisation.name,
-            country: row.country,
+            phoneNumber: row.phoneNumber,
+            address: row.address,
+            state: row.state,
             status: (
               <div className="flex items-center text-gray-900 font-medium">
                 <div
@@ -156,7 +159,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({
                   <div className="flex items-center cursor-pointer">
                     <BsThreeDots onClick={() => handleClick(index)} size={24} />
                   </div>
-                  {visibilities[index] ? (
+                  {visibilities && visibilities[index] ? (
                     <div className="absolute border border-muted rounded-md z-10 right-0 top-full px-3 w-max bg-white">
                       <Link
                         href={`/users/${row.id}`}
@@ -305,7 +308,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({
           showPagination={true}
           showPageSize={true}
           setCurrentPage={(value: number) => setPage(value)}
-          totalItems={filteredTableData.length}
+          totalItems={filteredTableData?.length}
           pageSize={10}
           useEmptyTable={true}
         />

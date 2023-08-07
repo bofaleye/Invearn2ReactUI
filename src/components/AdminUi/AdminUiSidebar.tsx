@@ -133,6 +133,37 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                       Banks
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      href={APP_ROUTES.document_formats}
+                    >
+                      Document Formats
+                    </Link>
+                    <Link
+                      className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      href={APP_ROUTES.share_holder_types}
+                    >
+                      Shareholder Types
+                    </Link>
+                  </li>
+                </SidebarItem>
+
+                <SidebarItem
+                  mobileTag={tag}
+                  title="User Management"
+                  icon={
+                    <LockIcon className="flex-shrink-0 w-6 h-6 text-gray-500 group-hover:text-green-800 transition duration-75 group-hover:text-sidebar-icons-active " />
+                  }
+                >
+                  <li>
+                    <Link
+                      className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      href={APP_ROUTES.users}
+                    >
+                      Users
+                    </Link>
+                  </li>
                 </SidebarItem>
               </ul>
               <div className="pt-2 space-y-2">

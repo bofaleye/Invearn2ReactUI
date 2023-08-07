@@ -4,7 +4,7 @@ import { IUser } from "@/models/User";
 import { ReusableDrawerRef } from "@/components/ReusableDrawer";
 import EditUser from "./EditUserProfile";
 import { Badge, Modal } from "flowbite-react";
-import AppButton from "@/components/Button";
+import Button from "@/components/Button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
@@ -104,7 +104,7 @@ export default function UserProfile({
           RegistrarName={`${userData?.firstname} ${userData?.lastname}` || ""}
           EmailAddress={`${userData?.email}` || ""}
           OfficeAddress={
-            userData?.organisation.address || "222B Palmgrove Ikorodu Rd"
+            userData?.organisation?.address || "222B Palmgrove Ikorodu Rd"
           }
           PhoneNumber={"08098123456"}
           UserType={"User"}
@@ -178,19 +178,16 @@ export default function UserProfile({
               </Badge>
             </div>
             <div className="flex gap-4">
-              <AppButton
-                text="Add Role"
+              <Button
                 appButtonType="green-button"
-                buttonClick={() => setAddOpenModal(!openAddModal)}
-                buttonWidth="w-[25%]"
-              />
-
-              <AppButton
-                text="Remove Role"
+                onClick={() => setAddOpenModal(!openAddModal)}
+                className="w-[25%]"
+              >Add Role</Button>
+              <Button
                 appButtonType="red-button"
-                buttonClick={undefined}
-                buttonWidth="w-[25%]"
-              />
+                onClick={undefined}
+                className="w-[25%]"
+              >Remove Role</Button>
             </div>
             <SuccessModal
               openModal={addRoleSuccessModal}
@@ -218,24 +215,22 @@ export default function UserProfile({
                     errors={errors}
                   />
                   <div className=" flex gap-4">
-                    <AppButton
-                      text="Save"
+                    <Button
                       appButtonType="green-button"
-                      buttonClick={undefined}
-                      buttonWidth="w-[25%]"
+                      onClick={undefined}
+                      className="w-[25%]"
                       type="submit"
                       isLoading={response.isLoading}
-                    />
-                    <AppButton
-                      text="Close"
+                    >Save</Button>
+                    <Button
                       appButtonType="red-button"
-                      buttonClick={() => {
+                      onClick={() => {
                         reset();
                         setAddOpenModal(!openAddModal);
                       }}
-                      buttonWidth="w-[25%]"
+                      className="w-[25%]"
                       type="button"
-                    />
+                    >Close</Button>
                   </div>
                 </form>
               </Modal.Body>

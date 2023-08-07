@@ -10,6 +10,7 @@ import { setCookie } from "cookies-next";
 import { AUTH_KEY } from "@/constants/cookieKeys";
 import { useLoginMutation } from "./loginApiSlice";
 
+
 const LoginPage: NextPage<any> = () => {
   // RTK
   const [login, response] = useLoginMutation();
@@ -50,6 +51,7 @@ const LoginPage: NextPage<any> = () => {
   };
 
   return (
+
     <div className="bg-login-background h-screen bg-no-repeat bg-cover flex items-center justify-center sm:p-0 px-4">
       <LoginForm
         isLoading={response.isLoading}
@@ -57,6 +59,7 @@ const LoginPage: NextPage<any> = () => {
         // onRememberMe={onRememberMe}
       />
     </div>
+
   );
 };
 

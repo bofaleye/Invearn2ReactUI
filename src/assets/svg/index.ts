@@ -17,6 +17,7 @@ import NoDataIcon from './no-data-icon.svg';
 import UploadFileIcon from './upload-file-icon.svg';
 import HomeIcon from './home-icon.svg';
 import LeftArrowIcon from './left-arrow.svg';
+import SearchIcon from "./search.svg";
 
 export {
   DashboardIcon,
@@ -38,4 +39,5 @@ export {
   UploadFileIcon,
   HomeIcon,
   LeftArrowIcon,
+  SearchIcon,
 };

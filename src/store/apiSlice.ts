@@ -19,6 +19,7 @@ export const apiSlice = createApi({
     baseUrl: "https://invearn2-coreapi-dev.azurewebsites.net/api/",
     prepareHeaders: async (headers, { getState }) => {
       const token = await getToken();
+// console.log(token)
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }

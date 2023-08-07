@@ -14,21 +14,21 @@ export const usersTableColumns: ITableColumn[] = [
       sort: false,
     },
     {
-      title: "Currency",
-      dataIndex: "currency",
-      key: "currency",
+      title: "Phone number",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
       sort: false,
     },
     {
-      title: "Company",
-      dataIndex: "company",
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      sort: false,
+    },
+    {
+      title: "State",
+      dataIndex: "state",
       key: "state",
-      sort: false,
-    },
-    {
-      title: "Country",
-      dataIndex: "country",
-      key: "country",
       sort: false,
     },
     {
