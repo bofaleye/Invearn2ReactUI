@@ -140,13 +140,23 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                     >
                       Document Formats
                     </Link>
+                    </li>
+                    <li>
+                    <Link
+                      className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      href={APP_ROUTES.document_types}
+                    >
+                      Document type
+                    </Link>
+                    </li>
+                    <li>
                     <Link
                       className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
                       href={APP_ROUTES.share_holder_types}
                     >
                       Shareholder Types
                     </Link>
-                  </li>
+                    </li>
                 </SidebarItem>
 
                 <SidebarItem
