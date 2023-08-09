@@ -45,6 +45,28 @@ const extendedApi = apiSlice.injectEndpoints({
       },
       invalidatesTags: (result, error, { id }) => [{ type: "Users", id }],
     }),
+    activateDeactivateUser: builder.mutation<
+    void,
+    Pick<IUser, "id"> & Partial<IUser>
+  >({
+    query: (data) => ({
+      url: `users/ActivateDeactivateUser/${data.userId}?id=${data.id}&isActive=${data?.isActive}`,
+      method: "PATCH",
+    }),
+    async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+      const patchResult = dispatch(
+        extendedApi.util.updateQueryData("fetchuserById", id, (draft) => {
+          Object.assign(draft, patch);
+        })
+      );
+      try {
+        await queryFulfilled;
+      } catch {
+        patchResult.undo();
+      }
+    },
+    invalidatesTags: (result, error, { id }) => [{ type: "Users", id }],
+  }),
 
     deleteUser: builder.mutation<{ success: boolean; id: number }, number>({
       query(id) {
@@ -66,4 +88,5 @@ export const {
   useFetchuserByIdQuery,
   useUpdatUserMutation,
   useDeleteUserMutation,
+  useActivateDeactivateUserMutation,
 } = extendedApi;
