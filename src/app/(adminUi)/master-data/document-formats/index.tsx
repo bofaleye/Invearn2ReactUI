@@ -97,7 +97,7 @@ export const DocumentFormats: React.FC = () => {
 
   const tableAction: TableActionItem[] = [
     {
-      text: "Edit Department",
+      text: "Edit Document Format",
       icon: <Edit className="mr-3" />,
       disabled: false,
       visible: true,

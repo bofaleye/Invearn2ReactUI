@@ -73,7 +73,7 @@ export default function CreateDocumentTypeDrawer({
     if (isSuccess) {
       GpToast({
         type: "success",
-        message: "Share holder added successfully",
+        message: "Document type added successfully",
         placement: toast.POSITION.TOP_RIGHT,
       });
       onCreateSuccess?.();

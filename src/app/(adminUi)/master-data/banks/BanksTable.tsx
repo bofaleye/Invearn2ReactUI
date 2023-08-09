@@ -101,7 +101,7 @@ export default function BanksTable({
 
   const tableAction: TableActionItem[] = [
     {
-      text: "Edit Department",
+      text: "Edit Bank",
       icon: <Edit className="mr-3" />,
       disabled: false,
       visible: true,
