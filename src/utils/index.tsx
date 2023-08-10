@@ -1,20 +1,19 @@
+import { GpToast } from "@/components/Toast";
+import { toast } from "react-toastify";
+
 export const getInitials = (name: string): string => {
-  const words = name?.split(' ');
+  const words = name.split(" ");
 
-  const initials = words?.map(word => word.charAt(0).toUpperCase());
+  const initials = words.map((word) => word.charAt(0).toUpperCase());
 
-  return initials?.join('');
-}
+  return initials.join("");
+};
 
-export const downloadCSV = (
-  headers: any[],
-  data: any[],
-  filename: string
-) => {
+export const downloadCSV = (headers: any[], data: any[], filename: string) => {
   const csvContent = convertArrayToCSV(headers, data);
-  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const blob = new Blob([csvContent], { type: "text/csv" });
 
-  const downloadLink = document.createElement('a');
+  const downloadLink = document.createElement("a");
   const url = URL.createObjectURL(blob);
   downloadLink.href = url;
   downloadLink.download = filename;
@@ -30,13 +29,26 @@ const convertArrayToCSV = (headers: any[], array: any[]): string => {
   const csvRows = [];
 
   // Push the headers
-  csvRows.push(headers.join(','));
+  csvRows.push(headers.join(","));
 
   // Push the data
-  array.forEach(item => {
-    const values = headers.map(header => item[header]);
-    csvRows.push(values.join(','));
+  array.forEach((item) => {
+    const values = headers.map((header) => item[header]);
+    csvRows.push(values.join(","));
   });
 
-  return csvRows.join('\n');
+  return csvRows.join("\n");
 };
+
+export function displayErrorToast(errors: object) {
+  if (errors) {
+    const errorMessages = Object.values(errors).flat();
+    errorMessages.forEach((errorMessage: string) => {
+      GpToast({
+        type: "error",
+        message: errorMessage,
+        placement: toast.POSITION.TOP_LEFT,
+      });
+    });
+  }
+}

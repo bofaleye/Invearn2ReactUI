@@ -16,6 +16,10 @@ import { UserRole } from "@/models/UserRole";
 import { MySelect } from "@/components/FormElements/Inputs";
 import { toast } from "react-toastify";
 import SuccessModal from "@/components/Modals/SuccessModal";
+import { useSuspendUnSuspendMutation } from "../UserApiSlice";
+import { GpToast } from "@/components/Toast";
+import { LockIcon, UnlockIcon } from "@/assets";
+import { ConfirmationModal } from "../usersTable";
 
 //TODO: Include skeleton when data is fetching
 interface UserProfileProps {
@@ -35,6 +39,7 @@ export default function UserProfile({
   const [addRoleToUser, response] = useAddRoleToUserMutation();
   const [addRoleSuccessModal, setAddRoleSuccessToggleModal] = useState(false);
   const [roleOptions, setRoleOptions] = useState<object[]>([]);
+  const [suspendUser, suspendUserResponse] = useSuspendUnSuspendMutation();
   const {
     register,
     handleSubmit,
@@ -88,7 +93,7 @@ export default function UserProfile({
   useEffect(() => {
     let options: object[] = [];
     if (Roles.data) {
-      Roles.data.map((item: UserRole) =>
+      Roles.data.forEach((item: UserRole) =>
         options.push({
           name: item.name,
           value: item.name,
@@ -97,16 +102,52 @@ export default function UserProfile({
     }
     setRoleOptions(options);
   }, [Roles.data]);
+  const [showIsSuspendModal, setShowIsSuspendModal] = useState<boolean>(false);
+
+  const handleSuspendModal = () => {
+    setShowIsSuspendModal(!showIsSuspendModal);
+  };
+
+  const handleSuspendUser = (row: IUser) => {
+    suspendUser({
+      id: row.id,
+      userId: row.id,
+      isDisabled: !row.isDisabled,
+    }).then((res: any) => {
+      if (res.error) {
+        handleSuspendModal();
+        GpToast({
+          type: "error",
+          message: "An error occured, kindly try again",
+          placement: toast.POSITION.TOP_LEFT,
+        });
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (suspendUserResponse.isSuccess) {
+      const { message } = suspendUserResponse.data;
+      GpToast({
+        type: "success",
+        message: message,
+        placement: toast.POSITION.TOP_LEFT,
+      });
+      refetch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [suspendUserResponse]);
+
   return (
     <div className="w-[90%]  flex justify-between">
       <div className="w-[33%]">
         <ProfileInfo
-          RegistrarName={`${userData?.firstname} ${userData?.lastname}` || ""}
+          RegistrarName={userData?.name || ""}
           EmailAddress={`${userData?.email}` || ""}
           OfficeAddress={
             userData?.organisation?.address || "222B Palmgrove Ikorodu Rd"
           }
-          PhoneNumber={"08098123456"}
+          PhoneNumber={userData?.phoneNumber || "08098123456"}
           UserType={"User"}
           handleEdit={handleEditDrawer}
         />
@@ -118,6 +159,55 @@ export default function UserProfile({
       />
       <div className="w-[65%] flex justify-center items-center  p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-4 dark:bg-gray-800">
         <div className="w-[90%]">
+          <div className="my-2">
+            {userData?.isDisabled ? (
+              <div
+                onClick={() => setShowIsSuspendModal(!showIsSuspendModal)}
+                className="flex justify-start cursor-pointer  py-3 border-b border-neutral-50 text-red-600 items-center gap-2"
+              >
+                <LockIcon className="w-6 h-6" />
+                Reinstate user
+                {ConfirmationModal(
+                  `Are you sure you want to ${
+                    userData?.isDisabled ? "re-instate" : "suspend"
+                  } this user?`,
+                  `${userData?.isDisabled ? "Reinstate" : "Suspend"}`,
+                  showIsSuspendModal,
+
+                  () => {
+                    setShowIsSuspendModal(!showIsSuspendModal);
+                  },
+                  () => {
+                    handleSuspendUser(userData);
+                  },
+                  suspendUserResponse.isLoading
+                )}
+              </div>
+            ) : (
+              <div
+                onClick={() => setShowIsSuspendModal(!showIsSuspendModal)}
+                className="flex justify-start cursor-pointer  py-3 border-b border-neutral-50 text-gray-700 items-center gap-2"
+              >
+                <UnlockIcon />
+                Suspend user
+                {ConfirmationModal(
+                  `Are you sure you want to ${
+                    userData?.isDisabled ? "re-instate" : "suspend"
+                  } this user?`,
+                  `${userData?.isDisabled ? "Reinstate" : "Suspend"}`,
+                  showIsSuspendModal,
+
+                  () => {
+                    setShowIsSuspendModal(!showIsSuspendModal);
+                  },
+                  () => {
+                    handleSuspendUser(userData);
+                  },
+                  suspendUserResponse.isLoading
+                )}
+              </div>
+            )}
+          </div>
           <div className="grid grid-cols-2 grid-rows-2 gap-y-2.5">
             <div>
               <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -182,12 +272,16 @@ export default function UserProfile({
                 appButtonType="green-button"
                 onClick={() => setAddOpenModal(!openAddModal)}
                 className="w-[25%]"
-              >Add Role</Button>
+              >
+                Add Role
+              </Button>
               <Button
                 appButtonType="red-button"
                 onClick={undefined}
                 className="w-[25%]"
-              >Remove Role</Button>
+              >
+                Remove Role
+              </Button>
             </div>
             <SuccessModal
               openModal={addRoleSuccessModal}
@@ -221,7 +315,9 @@ export default function UserProfile({
                       className="w-[25%]"
                       type="submit"
                       isLoading={response.isLoading}
-                    >Save</Button>
+                    >
+                      Save
+                    </Button>
                     <Button
                       appButtonType="red-button"
                       onClick={() => {
@@ -230,7 +326,9 @@ export default function UserProfile({
                       }}
                       className="w-[25%]"
                       type="button"
-                    >Close</Button>
+                    >
+                      Close
+                    </Button>
                   </div>
                 </form>
               </Modal.Body>

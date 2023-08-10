@@ -62,7 +62,7 @@ export const ConfirmationModal = (
     <Modal size="sm" dismissible popup show={showModal} onClose={() => onClose}>
       <Modal.Body className="h-[300px] p-4 flex  items-center justify-center">
         <div className=" flex flex-col justify-around items-center text-center">
-          <p>
+          <p className="mt-4">
             <RiErrorWarningLine color="red" size={34} />
           </p>
           <p>{bodyText}</p>
@@ -122,7 +122,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({
           refetch();
         }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         toast.error(`An error occured, kindly try again`, {
           position: toast.POSITION.TOP_LEFT,
         });
@@ -242,7 +242,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({
                   {visibilities && visibilities[index] ? (
                     <div className="absolute border border-muted rounded-md z-10 right-0 top-full px-3 w-max bg-white">
                       <Link
-                        href={`/application-management/users/${row.id}`}
+                        href={`/users/${row.id}`}
                         className="flex cursor-pointer text-left py-3 border-b border-neutral-50 text-small text-gray-700 items-center gap-2"
                       >
                         <Eye />

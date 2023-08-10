@@ -18,6 +18,7 @@ import UploadFileIcon from './upload-file-icon.svg';
 import HomeIcon from './home-icon.svg';
 import LeftArrowIcon from './left-arrow.svg';
 import SearchIcon from "./search.svg";
+import UnlockIcon from "./unlock.svg";
 
 export {
   DashboardIcon,
@@ -26,6 +27,7 @@ export {
   SettingsIcon,
   AuditTrailIcon,
   LockIcon,
+  UnlockIcon,
   PasswordResetIcon,
   PlusIcon,
   DropDownIcon,
