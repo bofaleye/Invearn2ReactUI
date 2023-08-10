@@ -11,6 +11,11 @@ export interface NewUser {
 }
 
 export interface IUser{
+    [x: string]: any;
+    name: string;
+    phoneNumber: string;
+    isLockedOut: any;
+    roles: any;
     isActive: boolean;
     id: string,
     userId: string,
@@ -23,7 +28,8 @@ export interface IUser{
     email: string,
     dateOfBirth: string,
     applicationRoles?: string[],
-    organisation: any
+    organisation: any,
+    isDisabled: boolean,
 
 
 }
