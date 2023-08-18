@@ -101,7 +101,8 @@ export default function ShareHolderType(): React.ReactElement {
   if(isSuccess){
     setDeleteModalOpen(false)
     GpToast({ type: 'success', message: "Shareholder type deleted successfully",
-    placement : toast.POSITION.TOP_RIGHT})
+    placement : toast.POSITION.TOP_RIGHT});
+    refetch();
   }
 
   if(isError){
