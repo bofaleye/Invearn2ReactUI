@@ -127,7 +127,8 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                 >
                   <li>
                     <Link
-                      className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                       className={`flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700
+                       ${isActiveRoute('banks') && activeClass}`}
                       href={APP_ROUTES.banks}
                     >
                       Banks
@@ -135,7 +136,8 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                   </li>
                   <li>
                     <Link
-                      className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      className={`flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700
+                      ${isActiveRoute('document-formats') && activeClass}`}
                       href={APP_ROUTES.document_formats}
                     >
                       Document Formats
@@ -143,15 +145,26 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                     </li>
                     <li>
                     <Link
-                      className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      className={`flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700
+                      ${isActiveRoute('document-types') && activeClass}`}
                       href={APP_ROUTES.document_types}
                     >
-                      Document type
+                      Document Types
                     </Link>
                     </li>
                     <li>
                     <Link
-                      className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      className={`flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700 
+                      ${isActiveRoute('security-types') && activeClass}`}
+                      href={APP_ROUTES.security_type}
+                    >
+                      Security Types
+                    </Link>
+                    </li>
+                    <li>
+                    <Link
+                      className={`flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700
+                      ${isActiveRoute('holder-types') && activeClass}`}
                       href={APP_ROUTES.share_holder_types}
                     >
                       Shareholder Types
@@ -168,7 +181,8 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                 >
                   <li>
                     <Link
-                      className="flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      className={`flex items-center p-2 text-base text-gray-500 transition duration-75 rounded-lg pl-11 group hover:bg-green-100 dark:text-gray-200 dark:hover:bg-gray-700
+                      ${isActiveRoute('users') && activeClass}`}
                       href={APP_ROUTES.users}
                     >
                       Users
