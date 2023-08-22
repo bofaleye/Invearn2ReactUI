@@ -4,11 +4,13 @@ import React from "react";
 import AdminUiNavbar from "@/components/AdminUi/AdminUiNavbar";
 import AdminUiSidebar from "@/components/AdminUi/AdminUiSidebar";
 import { useGuard } from "@/hooks/useGuard";
+import IdleTimerWrapper from "@/components/IdleTimer";
 
 const AdminSettingsLayout: React.FC<any> = ({ children }) => {
   useGuard();
   return (
     <>
+    <IdleTimerWrapper>
       <AdminUiNavbar />
       <div className="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900 no-scrollbar">
         <AdminUiSidebar />
@@ -21,6 +23,7 @@ const AdminSettingsLayout: React.FC<any> = ({ children }) => {
           </div>
         </div>
       </div>
+      </IdleTimerWrapper>
     </>
   );
 };
