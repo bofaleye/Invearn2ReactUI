@@ -1,16 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Modal, Spinner } from "flowbite-react";
+import { Modal } from "flowbite-react";
 import {
   IdleTimerProvider,
-  PresenceType,
   useIdleTimerContext,
 } from "react-idle-timer";
 import { RiErrorWarningLine } from "react-icons/ri";
 import Button from "../Button";
 import { useRouter } from 'next/navigation'
-const timeout = 1000 * 60 * 2;
-const promptBeforeIdle = 1000 * 60
+const timeout = 1000 * 60 * 5;
+const promptBeforeIdle = 1000 * 60;
 const IdleTimerWrapper = ({ children }: { children: React.ReactNode }) => {
   const route = useRouter();
   const [open, setOpen] = useState<boolean>(false);
@@ -78,12 +77,6 @@ const IdleTimePrompt = ({ open}: {open: boolean}) =>{
               <p className="font-medium text-lg mt-4 text-black">Are still here?</p>
               <p>{`You will be logged out in ${remaining} seconds` }</p>
               <div className=" w-full flex justify-center mt-4 mb-4">
-                {/* <Button
-                  appButtonType="grey-button"
-                  className="w-[45%]"
-                  disabled={actionLoading}
-                  onClick={setOpen}>Cancel</Button> */}
-            
                 <Button
                     appButtonType="green-button"
                     className="w-[70%]"
