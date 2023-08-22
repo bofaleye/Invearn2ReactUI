@@ -1,4 +1,4 @@
-"use cleint";
+"use client";
 
 import { Modal, Spinner } from "flowbite-react";
 import { RiErrorWarningLine } from "react-icons/ri";
