@@ -6,6 +6,7 @@ const APP_ROUTES = {
   users: "/users",
   share_holder_types: "/master-data/holder-types",
   document_types: "/master-data/document-types",
+  security_type: "/master-data/security-types"
 };
 
 export default APP_ROUTES;
