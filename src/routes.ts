@@ -9,6 +9,7 @@ export const protectedRoutes: RouteItem[] = [
     { path: '/registrar', pattern: /^\/registrar\.*$/ },
     { path: '/settings', pattern: /^\/settings\.*$/ },
     { path: '/users', pattern: /^\/users\.*$/ },
+    { path: '/assets', pattern: /^\/assets\.*$/ },
 ]
 
 export const authRoutes: RouteItem[] = [

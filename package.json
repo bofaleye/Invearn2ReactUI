@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix"
+    "lint": "next lint --fix",
+    "typegen:clientCompanies": "openapi-typescript https://invearn2-coreapi-dev.azurewebsites.net/swagger/ApplicationManagement/swagger.json --output ./types/api/clientCompanies.ts"
   },
   "dependencies": {
     "@hookform/error-message": "^2.0.1",
@@ -29,6 +30,7 @@
     "flowbite-react": "^0.4.2",
     "next": "13.4.2",
     "next-auth": "^4.22.1",
+    "openapi-typescript": "^6.5.3",
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-apexcharts": "^1.4.0",
