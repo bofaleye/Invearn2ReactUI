@@ -1,13 +1,8 @@
-"use client";
-
-import dynamic from "next/dynamic";
-import Image from "next/image";
 import React from "react";
+import Dashboard from ".";
 
-
-export default function Dashboard() {
+export default function MainPage() {
   return (
-    <div className="px-4 pt-6">
-         </div>
+    <Dashboard />
   );
 }

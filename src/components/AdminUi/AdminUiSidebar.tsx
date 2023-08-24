@@ -191,7 +191,7 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                 </SidebarItem>
               </ul>
               <div className="pt-2 space-y-2">
-                <Link
+                {/* <Link
                   href="/settings"
                   className={`flex items-center p-2 text-base text-gray-900 font-medium rounded-lg hover:bg-green-100 group dark:text-gray-200 dark:hover:bg-gray-700 ${
                     isActiveRoute("settings") && activeClass
@@ -201,8 +201,8 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                   <span className="ml-3" sidebar-toggle-item="">
                     Settings
                   </span>
-                </Link>
-                <Link
+                </Link> */}
+                {/* <Link
                   href="/settings"
                   className={`flex items-center p-2 text-base text-gray-900 font-medium rounded-lg hover:bg-green-100 group dark:text-gray-200 dark:hover:bg-gray-700 ${
                     isActiveRoute("") && activeClass
@@ -212,7 +212,7 @@ const AdminUiSidebar: React.FC<AdminUiSidebarProps> = ({ mobile = false }) => {
                   <span className="ml-3" sidebar-toggle-item="">
                     App Notification
                   </span>
-                </Link>
+                </Link> */}
                 <Link
                   href="/"
                   className={`flex items-center p-2 text-base text-gray-900 font-medium rounded-lg hover:bg-green-100 group dark:text-gray-200 dark:hover:bg-gray-700 ${
