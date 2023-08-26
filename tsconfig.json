@@ -25,8 +25,22 @@
     ],
     "paths": {
       "@/*": [
-        "./src/*"
-      ]
+        "./src/*",
+        
+      ],
+      "@components/*": ["./src/components/*"],
+      "@validation/*": ["./src/validation/*"],
+      "@fonts/*": ["./src/fonts/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@services/*": ["./src/services/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@store/*": ["./src/store/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@pages/*": ["./pages/*"],
+      "@public/*": ["./public/*"],
+      "@types/*": ["./types/*"],
+      "@providers/*": ["./src/providers/*"],
+      "@schemas/*": ["./src/schemas/*"]
     }
   },
   "include": [

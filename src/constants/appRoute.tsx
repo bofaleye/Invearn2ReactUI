@@ -7,7 +7,9 @@ const APP_ROUTES = {
   share_holder_types: "/master-data/holder-types",
   document_types: "/master-data/document-types",
   security_type: "/master-data/security-types",
-  states: "/master-data/states"
+  states: "/master-data/states",
+  assets:"/assets",
+  assets_price:"/asset-price"
 };
 
 export default APP_ROUTES;
