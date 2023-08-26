@@ -8,7 +8,8 @@ const APP_ROUTES = {
   document_types: "/master-data/document-types",
   security_type: "/master-data/security-types",
   states: "/master-data/states",
-  assets:"/assets"
+  assets:"/assets",
+  assets_price:"/asset-price"
 };
 
 export default APP_ROUTES;

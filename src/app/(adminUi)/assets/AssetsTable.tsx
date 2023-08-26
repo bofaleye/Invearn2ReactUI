@@ -1,26 +1,20 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ITableColumn } from "@/components/Table/model";
-import { BsThreeDots } from "react-icons/bs";
 import { SearchIcon, Delete, Edit, Eye, PlusIcon } from "@/assets";
 import { downloadCSV } from "@/utils";
 import Table from "@/components/Table";
 import Button from "@/components/Button";
-import { IAsset, IBank } from "@/models/bank";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu"
+import { AssetData, IAsset, IBank } from "@/models/bank";
+
 import EditBankDrawer from "./EditBankDrawer";
 import { useDeleteAssetMutation } from "./assetsApiSlice";
-import { RiErrorWarningLine } from "react-icons/ri";
-import { Spinner, Modal } from "flowbite-react";
+
 import TableAction, { TableActionItem } from "@/components/Table/TableAction";
 import AppSkeleton from "@components/Skeleton";
 import PromptModal from "@components/Modals/PromptModal";
 import { GpToast } from "@components/Toast";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const tableExportFileName = "banks";
 export const tableColumns: ITableColumn[] = [
@@ -41,9 +35,9 @@ export const tableColumns: ITableColumn[] = [
     display: true,
   },
   {
-    dataIndex: "sortCode",
-    title: "Sort Code",
-    key: "sortCode",
+    dataIndex: "currentPrice",
+    title: "Current Price",
+    key: "currentPrice",
     sort: true,
     search: true,
     display: true,
@@ -56,8 +50,8 @@ export const tableColumns: ITableColumn[] = [
   },
 ];
 
-export interface BanksTableProps {
-  data?: IAsset[] | undefined;
+export interface AssetTableProps {
+  data?: AssetData[] | undefined | null;
   openCreateModal: () => void;
   setEditDrawerState?: (state: boolean) => void;
   refetch: () => void;
@@ -69,16 +63,19 @@ export default function BanksTable({
   openCreateModal,
   refetch,
   dataLoading,
-}: BanksTableProps) {
+}: AssetTableProps) {
   const entityNameSingular = "Asset";
 
   const [page, setPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredTableData, setFilteredTableData] = useState(data ?? []);
-  const [selectedBank, setSelectedBank] = useState<IBank | null>(null);
+  const [filteredTableData, setFilteredTableData] = useState<
+    AssetData[] | null
+  >(data ?? []);
+  const [selectedBank, setSelectedBank] = useState<AssetData | null>(null);
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
+  const {push}= useRouter()
 
   React.useEffect(() => {
     if (!data?.length) return;
@@ -86,9 +83,9 @@ export default function BanksTable({
       data.filter((row: any) => {
         let found = true;
 
-        for (let i = 0; i < tableColumns.length; i++) {
-          if (searchTerm.trim().length && tableColumns[i].search) {
-            found = row[tableColumns[i].dataIndex]
+        for (const element of tableColumns) {
+          if (searchTerm.trim().length && element.search) {
+            found = row[element.dataIndex]
               ?.toString()
               ?.toLowerCase()
               ?.includes(searchTerm.toLowerCase());
@@ -100,36 +97,45 @@ export default function BanksTable({
     );
   }, [data, searchTerm]);
 
-  const tableAction: TableActionItem[] = [
-    {
-      text: "Edit Asset",
-      icon: <Edit className="mr-3" />,
-      disabled: false,
-      visible: true,
-      action: () => setEditDrawerOpen(true),
-    },
-    {
-      text: "Delete",
-      icon: <Delete className="mr-3" />,
-      disabled: false,
-      visible: true,
-      action: ()=>setDeleteModalOpen(true),
-    },
-  ];
+  const tableAction = (id: string) => {
+    let tableIconArray: TableActionItem[] = [
+      {
+        text: "View Asset",
+        icon: <Eye className="mr-3" />,
+        disabled: false,
+        visible: true,
+        action: () => push(`assets/${id}`),
+      },
+      {
+        text: "Edit Asset",
+        icon: <Edit className="mr-3" />,
+        disabled: false,
+        visible: true,
+        action: () => setEditDrawerOpen(true),
+      },
+      {
+        text: "Delete",
+        icon: <Delete className="mr-3" />,
+        disabled: false,
+        visible: true,
+        action: () => setDeleteModalOpen(true),
+      },
+    ];
+    return tableIconArray;
+  };
 
   const dataSource = useMemo(() => {
     return filteredTableData?.map((row, index: number) => {
       return {
         uid: row.id,
         key: index,
-        name: row.name,
-        price: row.prices,
-        code: row.code,
-        currentPrice: row.currentPrice,
+        name: row?.name,
+        code: row?.code,
+        currentPrice: row?.currentPrice,
         option: (
           <TableAction
-            index={row.id}
-            actionItems={tableAction}
+            index={row.id ?? ""}
+            actionItems={tableAction(row.id)}
             onDropShow={() => setSelectedBank(row)}
           />
         ),
@@ -211,29 +217,12 @@ export default function BanksTable({
               useEmptyTable={true}
             />
           )}
-          <div className="flex justify-between items-center pt-3 sm:pt-6">
-            {/* <div className="p-3">
-              <Button
-                type="button"
-                appButtonType="green-button"
-                onClick={() =>
-                  downloadCSV(
-                    tableColumns,
-                    filteredTableData,
-                    tableExportFileName
-                  )
-                }
-                className="inline-flex items-center text-white rounded-lg focus:ring-4 "
-              >
-                Download CSV
-              </Button>
-            </div> */}
-          </div>
+          <div className="flex justify-between items-center pt-3 sm:pt-6"></div>
         </div>
       </div>
       {editDrawerOpen && (
         <EditBankDrawer
-          bank={selectedBank}
+          asset={selectedBank}
           open={editDrawerOpen}
           setOpen={setEditDrawerOpen}
           onEditSuccess={() => {
@@ -242,65 +231,61 @@ export default function BanksTable({
           }}
         />
       )}
-      {deleteModalOpen && <DeleteModal
-        bank={selectedBank}
-        open={deleteModalOpen}
-        setOpen={setDeleteModalOpen}
-        refetch={refetch}
-      />}
+      {deleteModalOpen && (
+        <DeleteModal
+          asset={selectedBank}
+          open={deleteModalOpen}
+          setOpen={setDeleteModalOpen}
+          refetch={refetch}
+        />
+      )}
     </>
   );
 }
 
-
 interface DeleteModalProps {
-  bank: IBank | null;
+  asset: AssetData | null;
   open: boolean;
   refetch?: () => void;
   setOpen: (open: boolean) => void;
 }
 
-function DeleteModal({
-  bank,
-  setOpen,
-  refetch,
-  open,
-}: DeleteModalProps) {
-  const [deleteBank, { isLoading, isSuccess, isError, error }] = useDeleteAssetMutation();
+function DeleteModal({ asset, setOpen, refetch, open }: DeleteModalProps) {
+  const [deleteBank, { isLoading, isSuccess, isError, error }] =
+    useDeleteAssetMutation();
 
   const handleDelete = async (id: string) => {
     await deleteBank(id);
-    
   };
-  useEffect(()=>{
-  if(isError){
-    GpToast({
-      type: "error",
-      message: "Something went wrong",
-      placement: toast.POSITION.TOP_RIGHT,
-    });
-  }
+  useEffect(() => {
+    if (isError) {
+      GpToast({
+        type: "error",
+        message: "Something went wrong",
+        placement: toast.POSITION.TOP_RIGHT,
+      });
+    }
 
-  if(isSuccess){
-    GpToast({
-      type: "success",
-      message: "Bank deleted successfully",
-      placement: toast.POSITION.TOP_RIGHT,
-    });
-    setOpen?.(false);
-    refetch?.();
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[isError, isSuccess])
+    if (isSuccess) {
+      GpToast({
+        type: "success",
+        message: "Asset deleted successfully",
+        placement: toast.POSITION.TOP_RIGHT,
+      });
+      setOpen?.(false);
+      refetch?.();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError, isSuccess]);
 
   return (
-   <PromptModal
-     headingText="Delete Bank"
-     bodyText="Are you sure you want to delete this bank?"
-     isOpen={open}
-     OnConfirm={()=>handleDelete(bank?.id ?? "")}
-     actionLoading={isLoading}
-     setOpen={()=>setOpen(false)}
-   />
+    <PromptModal
+      headingText="Delete Asset"
+      bodyText="Are you sure you want to delete this Asset?"
+      isOpen={open}
+      OnConfirm={() => handleDelete(asset?.id ?? "")}
+      actionLoading={isLoading}
+      setOpen={() => setOpen(false)}
+    />
   );
 }

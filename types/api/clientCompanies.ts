@@ -187,11 +187,11 @@ export interface paths {
   };
   "/api/Registrars": {
     get: {
-      requestBody?: {
-        content: {
-          "application/json": components["schemas"]["GetRegistrarListQuery"];
-          "text/json": components["schemas"]["GetRegistrarListQuery"];
-          "application/*+json": components["schemas"]["GetRegistrarListQuery"];
+      parameters: {
+        query?: {
+          Query?: string;
+          PageNumber?: number;
+          PageSize?: number;
         };
       };
       responses: {
@@ -209,6 +209,45 @@ export interface paths {
             "text/plain": components["schemas"]["ClientCompanyViewModelPaginatedListCommandResult"];
             "application/json": components["schemas"]["ClientCompanyViewModelPaginatedListCommandResult"];
             "text/json": components["schemas"]["ClientCompanyViewModelPaginatedListCommandResult"];
+          };
+        };
+        /** @description Error */
+        default: {
+          content: {
+            "text/plain": components["schemas"]["ProblemDetails"];
+            "application/json": components["schemas"]["ProblemDetails"];
+            "text/json": components["schemas"]["ProblemDetails"];
+          };
+        };
+      };
+    };
+  };
+  "/api/Test/enqueue-job": {
+    get: {
+      parameters: {
+        query?: {
+          Chn?: string;
+          Email?: string;
+          PhoneNumber?: string;
+          ClientCompanyId?: string;
+          Bvn?: string;
+        };
+      };
+      responses: {
+        /** @description Created */
+        201: {
+          content: {
+            "text/plain": components["schemas"]["HolderViewModelCommandResult"];
+            "application/json": components["schemas"]["HolderViewModelCommandResult"];
+            "text/json": components["schemas"]["HolderViewModelCommandResult"];
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          content: {
+            "text/plain": components["schemas"]["HolderViewModelCommandResult"];
+            "application/json": components["schemas"]["HolderViewModelCommandResult"];
+            "text/json": components["schemas"]["HolderViewModelCommandResult"];
           };
         };
         /** @description Error */
@@ -360,6 +399,42 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    ApplicationProfile: {
+      id?: string | null;
+      description?: string | null;
+      isActive?: boolean;
+      /** Format: uuid */
+      rowVersion?: string;
+      fullText?: string | null;
+      tags?: string | null;
+      caption?: string | null;
+      createdByUserId?: string | null;
+      /** Format: date-time */
+      dateCreated?: string | null;
+      updatedByUserId?: string | null;
+      /** Format: date-time */
+      dateUpdated?: string | null;
+      deletedByUserId?: string | null;
+      isDeleted?: boolean;
+      /** Format: date-time */
+      dateDeleted?: string | null;
+      userId?: string | null;
+      phoneNumber?: string | null;
+      email?: string | null;
+      address?: string | null;
+      token?: string | null;
+      isDisabled?: boolean;
+      displayCaption?: string | null;
+      dropdownCaption?: string | null;
+      shortCaption?: string | null;
+      individuals?: components["schemas"]["Individual"][] | null;
+      organisations?: components["schemas"]["Organisation"][] | null;
+      shareholderTypeId?: string | null;
+      shareholderType?: components["schemas"]["ShareholderType"];
+      stateId?: string | null;
+      state?: components["schemas"]["State"];
+      isTokenConfirmed?: boolean;
+    };
     ApplicationProfileUserProfileViewModelPaginatedListViewModel: {
       items?: components["schemas"]["UserProfileViewModel"][] | null;
       /** Format: int32 */
@@ -397,9 +472,24 @@ export interface components {
       dateCreated?: string | null;
       /** Format: date-time */
       dateUpdated?: string | null;
+      registrar?: components["schemas"]["RegistrarViewModel"];
       name?: string | null;
       code?: string | null;
-      registrarId?: string | null;
+      logoUrl?: string | null;
+      marketClassification?: string | null;
+      sector?: string | null;
+      subSector?: string | null;
+      natureofBusiness?: string | null;
+      companyAddress?: string | null;
+      telephone?: string | null;
+      fax?: string | null;
+      email?: string | null;
+      auditor?: string | null;
+      companySecretary?: string | null;
+      dateListed?: string | null;
+      dateofIncorporation?: string | null;
+      website?: string | null;
+      boardOfDirectors?: string | null;
       /** Format: double */
       currentPrice?: number;
       prices?: components["schemas"]["AssetPrice"][] | null;
@@ -445,16 +535,145 @@ export interface components {
       fullText?: string | null;
       tags?: string | null;
       caption?: string | null;
+      registrarId?: string | null;
       name?: string | null;
       code?: string | null;
-      registrarId?: string | null;
+      logoUrl?: string | null;
+      marketClassification?: string | null;
+      sector?: string | null;
+      subSector?: string | null;
+      natureofBusiness?: string | null;
+      companyAddress?: string | null;
+      telephone?: string | null;
+      fax?: string | null;
+      email?: string | null;
+      auditor?: string | null;
+      companySecretary?: string | null;
+      dateListed?: string | null;
+      dateofIncorporation?: string | null;
+      website?: string | null;
+      boardOfDirectors?: string | null;
     };
-    GetRegistrarListQuery: {
-      query?: string | null;
+    Holder: {
+      id?: string | null;
+      description?: string | null;
+      isActive?: boolean;
+      /** Format: uuid */
+      rowVersion?: string;
+      fullText?: string | null;
+      tags?: string | null;
+      caption?: string | null;
+      createdByUserId?: string | null;
+      /** Format: date-time */
+      dateCreated?: string | null;
+      updatedByUserId?: string | null;
+      /** Format: date-time */
+      dateUpdated?: string | null;
+      deletedByUserId?: string | null;
+      isDeleted?: boolean;
+      /** Format: date-time */
+      dateDeleted?: string | null;
+      applicationProfileId?: string | null;
+      applicationProfile?: components["schemas"]["ApplicationProfile"];
+      platformUniqueIdentifier?: string | null;
+      chn?: string | null;
+      bvn?: string | null;
+      address?: string | null;
+      isCautioned?: boolean;
+      shareholderTypeId?: string | null;
+      shareholderType?: components["schemas"]["ShareholderType"];
+      holderIdentifications?: components["schemas"]["HolderIdentification"][] | null;
+      displayCaption?: string | null;
+      dropdownCaption?: string | null;
+      shortCaption?: string | null;
+    };
+    HolderIdentification: {
+      id?: string | null;
+      description?: string | null;
+      isActive?: boolean;
+      /** Format: uuid */
+      rowVersion?: string;
+      fullText?: string | null;
+      tags?: string | null;
+      caption?: string | null;
+      createdByUserId?: string | null;
+      /** Format: date-time */
+      dateCreated?: string | null;
+      updatedByUserId?: string | null;
+      /** Format: date-time */
+      dateUpdated?: string | null;
+      deletedByUserId?: string | null;
+      isDeleted?: boolean;
+      /** Format: date-time */
+      dateDeleted?: string | null;
+      holderId?: string | null;
+      holder?: components["schemas"]["Holder"];
+      value?: string | null;
+      displayCaption?: string | null;
+      dropdownCaption?: string | null;
+      shortCaption?: string | null;
+    };
+    HolderViewModel: {
+      id: string;
+      description?: string | null;
+      isActive?: boolean;
+      /** Format: date-time */
+      dateCreated?: string | null;
+      /** Format: date-time */
+      dateUpdated?: string | null;
+      applicationProfileId?: string | null;
+      applicationProfile?: components["schemas"]["ApplicationProfile"];
+      platformUniqueIdentifier?: string | null;
+      chn?: string | null;
+      bvn?: string | null;
+      address?: string | null;
+      isCautioned?: boolean;
+      shareholderTypeId?: string | null;
+      shareholderType?: components["schemas"]["ShareholderType"];
+      holderIdentifications?: components["schemas"]["HolderIdentification"][] | null;
+    };
+    HolderViewModelCommandResult: {
+      /** Format: date-time */
+      timeStamp?: string;
+      errorFlag?: boolean;
+      payload?: components["schemas"]["HolderViewModel"];
+      message?: string | null;
       /** Format: int32 */
-      pageNumber?: number;
-      /** Format: int32 */
-      pageSize?: number;
+      statusCode?: number | null;
+      detail?: string | null;
+      instance?: string | null;
+      validationErrors?: components["schemas"]["ModelValidationError"][] | null;
+    };
+    Individual: {
+      id?: string | null;
+      description?: string | null;
+      isActive?: boolean;
+      /** Format: uuid */
+      rowVersion?: string;
+      fullText?: string | null;
+      tags?: string | null;
+      caption?: string | null;
+      createdByUserId?: string | null;
+      /** Format: date-time */
+      dateCreated?: string | null;
+      updatedByUserId?: string | null;
+      /** Format: date-time */
+      dateUpdated?: string | null;
+      deletedByUserId?: string | null;
+      isDeleted?: boolean;
+      /** Format: date-time */
+      dateDeleted?: string | null;
+      firstname?: string | null;
+      lastname?: string | null;
+      othernames?: string | null;
+      bvn?: string | null;
+      applicationProfileId?: string | null;
+      applicationProfile?: components["schemas"]["ApplicationProfile"];
+      /** Format: date-time */
+      dateOfBirth?: string;
+      displayCaption?: string | null;
+      dropdownCaption?: string | null;
+      shortCaption?: string | null;
     };
     ModelValidationError: {
       entity?: string | null;
@@ -466,6 +685,34 @@ export interface components {
       code?: string | null;
       description?: string | null;
     };
+    Organisation: {
+      id?: string | null;
+      description?: string | null;
+      isActive?: boolean;
+      /** Format: uuid */
+      rowVersion?: string;
+      fullText?: string | null;
+      tags?: string | null;
+      caption?: string | null;
+      createdByUserId?: string | null;
+      /** Format: date-time */
+      dateCreated?: string | null;
+      updatedByUserId?: string | null;
+      /** Format: date-time */
+      dateUpdated?: string | null;
+      deletedByUserId?: string | null;
+      isDeleted?: boolean;
+      /** Format: date-time */
+      dateDeleted?: string | null;
+      name?: string | null;
+      rcNumber?: string | null;
+      tin?: string | null;
+      displayCaption?: string | null;
+      dropdownCaption?: string | null;
+      shortCaption?: string | null;
+      applicationProfileId?: string | null;
+      applicationProfile?: components["schemas"]["ApplicationProfile"];
+    };
     ProblemDetails: {
       type?: string | null;
       title?: string | null;
@@ -474,6 +721,66 @@ export interface components {
       detail?: string | null;
       instance?: string | null;
       [key: string]: unknown;
+    };
+    RegistrarViewModel: {
+      id: string;
+      description?: string | null;
+      isActive?: boolean;
+      /** Format: date-time */
+      dateCreated?: string | null;
+      /** Format: date-time */
+      dateUpdated?: string | null;
+      name?: string | null;
+      code?: string | null;
+      platform?: string | null;
+    };
+    ShareholderType: {
+      id?: string | null;
+      description?: string | null;
+      isActive?: boolean;
+      /** Format: uuid */
+      rowVersion?: string;
+      fullText?: string | null;
+      tags?: string | null;
+      caption?: string | null;
+      createdByUserId?: string | null;
+      /** Format: date-time */
+      dateCreated?: string | null;
+      updatedByUserId?: string | null;
+      /** Format: date-time */
+      dateUpdated?: string | null;
+      deletedByUserId?: string | null;
+      isDeleted?: boolean;
+      /** Format: date-time */
+      dateDeleted?: string | null;
+      name?: string | null;
+      displayCaption?: string | null;
+      dropdownCaption?: string | null;
+      shortCaption?: string | null;
+    };
+    State: {
+      id?: string | null;
+      description?: string | null;
+      isActive?: boolean;
+      /** Format: uuid */
+      rowVersion?: string;
+      fullText?: string | null;
+      tags?: string | null;
+      caption?: string | null;
+      createdByUserId?: string | null;
+      /** Format: date-time */
+      dateCreated?: string | null;
+      updatedByUserId?: string | null;
+      /** Format: date-time */
+      dateUpdated?: string | null;
+      deletedByUserId?: string | null;
+      isDeleted?: boolean;
+      /** Format: date-time */
+      dateDeleted?: string | null;
+      name?: string | null;
+      displayCaption?: string | null;
+      dropdownCaption?: string | null;
+      shortCaption?: string | null;
     };
     StringCommandResult: {
       /** Format: date-time */
@@ -496,9 +803,24 @@ export interface components {
       fullText?: string | null;
       tags?: string | null;
       caption?: string | null;
+      registrarId?: string | null;
       name?: string | null;
       code?: string | null;
-      registrarId?: string | null;
+      logoUrl?: string | null;
+      marketClassification?: string | null;
+      sector?: string | null;
+      subSector?: string | null;
+      natureofBusiness?: string | null;
+      companyAddress?: string | null;
+      telephone?: string | null;
+      fax?: string | null;
+      email?: string | null;
+      auditor?: string | null;
+      companySecretary?: string | null;
+      dateListed?: string | null;
+      dateofIncorporation?: string | null;
+      website?: string | null;
+      boardOfDirectors?: string | null;
     };
     UserProfileViewModel: {
       id: string;

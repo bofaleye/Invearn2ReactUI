@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { DashboardIcon, PlusIcon } from "@/assets";
 import { Breadcrumb } from "flowbite-react";
 import SuccessModal from "@/components/Modals/SuccessModal";
 import AssetsTable from "./AssetsTable";
 import { useFetchAssetsQuery } from "./assetsApiSlice";
-import { useState } from "react";
 import Button from "../../../components/Button";
 import CreateBankDrawer from "./CreateAssetDrawer";
 
@@ -26,7 +25,7 @@ export const Assets: React.FC = () => {
       <div className="mb-4">
         <Breadcrumb aria-label="Default breadcrumb example">
           <Breadcrumb.Item href="#" icon={DashboardIcon}>
-            <p>Client Companies</p>
+            <p>Dashboard</p>
           </Breadcrumb.Item>
           <Breadcrumb.Item>Assets</Breadcrumb.Item>
         </Breadcrumb>
@@ -40,18 +39,23 @@ export const Assets: React.FC = () => {
             icon={<PlusIcon className="h-[1rem] w-[1rem] mr-2" />}
             appButtonType="green-button"
             height="small"
-            onClick={()=>setCreateDrawerOpen(true)}
+            onClick={() => setCreateDrawerOpen(true)}
           >
             Add New Asset
           </Button>
         </div>
-        <AssetsTable dataLoading={isFetching} data={data} refetch={refetch} openCreateModal={() => setCreateDrawerOpen(true)}  />
+        <AssetsTable
+          dataLoading={isFetching}
+          data={ (data as any)?.items}
+          refetch={refetch}
+          openCreateModal={() => setCreateDrawerOpen(true)}
+        />
       </div>
       <CreateBankDrawer
-            open={createDrawerOpen}
-            setOpen={setCreateDrawerOpen}
-            onCreateSuccess={onCreateSuccess}
-          />
+        open={createDrawerOpen}
+        setOpen={setCreateDrawerOpen}
+        onCreateSuccess={onCreateSuccess}
+      />
     </div>
   );
 };

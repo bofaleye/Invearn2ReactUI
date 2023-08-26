@@ -14,7 +14,7 @@ export interface TableActionItem {
 
 interface TableActionProps {
   index: string;
-  actionItems: TableActionItem[];
+  actionItems:  TableActionItem[];
   onDropShow?: () => void;
   onDropHide?: () => void;
 }
@@ -26,18 +26,12 @@ const TableAction: React.FC<TableActionProps> = ({ index, actionItems, onDropSho
   const options: DropdownOptions = {
     placement: "bottom",
     triggerType: "click",
-    // offsetSkidding: 0,
-    // offsetDistance: 10,
-    // delay: 300,
     onHide: () => {
       onDropHide? onDropHide(): null;
     },
     onShow: () => {
       onDropShow? onDropShow(): null;
     },
-    // onToggle: () => {
-    //     console.log('dropdown has been toggled');
-    // }
   };
 
   useEffect(() => {
