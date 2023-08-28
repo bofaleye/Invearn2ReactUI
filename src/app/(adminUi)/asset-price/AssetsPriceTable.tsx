@@ -19,17 +19,17 @@ import moment from "moment";
 
 export const tableColumns: ITableColumn[] = [
   {
-    dataIndex: "assetId",
-    title: "Asset Id",
-    key: "assetId",
+    dataIndex: "asset",
+    title: "Asset",
+    key: "asset",
     sort: true,
     search: true,
     display: true,
   },
   {
-    dataIndex: "description",
-    title: "Description",
-    key: "description",
+    dataIndex: "code",
+    title: "Code",
+    key: "code",
     sort: true,
     search: true,
     display: true,
@@ -83,7 +83,6 @@ export default function AssetPriceTable({
   const [editDrawerOpen, setEditDrawerOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const {push}= useRouter()
 
   React.useEffect(() => {
     if (!data?.length) return;
@@ -137,8 +136,8 @@ export default function AssetPriceTable({
       return {
         uid: row.id,
         key: index,
-        assetId: row?.assetId,
-        description: row?.description,
+        asset: row?.asset?.name,
+        code: row?.asset?.code,
         price: row?.price,
         timestamp: moment(row?.timestamp).format("DD MMM YY,  h:mm:ss a"),
         option: (

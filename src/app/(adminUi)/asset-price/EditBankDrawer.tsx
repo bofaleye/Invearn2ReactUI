@@ -7,7 +7,7 @@ import {
   useUpdateAssetPriceMutation } from "./assetsApiSlice";
 import { toast } from "react-toastify";
 import {  IAssetPrice, } from "@/models/bank";
-import { TextArea, TextInput } from "@/components/FormElements/Inputs";
+import {  TextInput } from "@/components/FormElements/Inputs";
 // import { Drawer } from "@/components/Drawer";
 import * as Yup from "yup";
 import Button from "@components/Button";
@@ -15,12 +15,7 @@ import Drawer from "@components/Drawer";
 import { GpToast } from "@components/Toast";
 
 
-const schema = Yup.object({
-  price: Yup.number().required("Asset Price is required."),
-  description: Yup.string().required("Asset Description is required."),
-});
 
-type TFormData = Yup.InferType<typeof schema>;
 type Options = {
   label: string;
   value: string;
@@ -36,6 +31,11 @@ interface EditAssetPriceDrawerProps {
 }
 
 export default function EditAssetDrawer({assetPrice, open, className, setOpen, onEditSuccess}: EditAssetPriceDrawerProps) {
+  const schema = Yup.object({
+    price: Yup.number().required("Asset Price is required."),
+    assetId: Yup.string().required().default(assetPrice?.asset?.id),
+  });
+  type TFormData = Yup.InferType<typeof schema>;
 
   const {
     register,
@@ -67,6 +67,7 @@ export default function EditAssetDrawer({assetPrice, open, className, setOpen, o
   },[isSuccess])
 
   const onSubmit = (data: TFormData) =>{
+  
     updateAssetPrice(data)
     .then((res: any) => {
       if (res.error) {
@@ -80,7 +81,7 @@ export default function EditAssetDrawer({assetPrice, open, className, setOpen, o
     
   return (
     <Drawer
-      title="Edit Asset"
+      title="Edit Asset Price"
       placement={'right'}
     //   description="Bank Information"
       isOpen={isLoading || open}
@@ -101,15 +102,6 @@ export default function EditAssetDrawer({assetPrice, open, className, setOpen, o
           errors={errors}
           {...register("price")}
         />
-        
-
-        <TextArea
-          label="Description"
-          required={true}
-          errors={errors}
-          {...register("description")}
-        />
-       
         
         
 

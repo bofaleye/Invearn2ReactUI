@@ -36,12 +36,16 @@ export interface AssetData extends IBaseModel {
 }
 
 export interface IAssetPrice extends IBaseModel {
-  assetId: string;
-  description:          string;
+  description?:          string;
   id:                   string;
   isActive:             boolean;
   price?:               number;
-  timestamp?:              Date
+  timestamp?:              Date;
+  asset: {
+    id: string,
+    name: string,
+    code: string;
+  },
 }
 export interface Registrar {
   name:        string;

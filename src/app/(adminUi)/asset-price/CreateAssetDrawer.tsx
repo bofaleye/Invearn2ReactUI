@@ -20,7 +20,6 @@ import { useFetchAssetsQuery } from "../assets/assetsApiSlice";
 
 const schema = Yup.object({
   price: Yup.number().required("Asset Price is required."),
-  description: Yup.string().required("Asset Description is required."),
   timestamp: Yup.date().required("Asset timeStamp is required.")
 });
 type TFormValues = Yup.InferType<typeof schema>;
@@ -112,7 +111,7 @@ export function CreateAssetPriceDrawer({
   return (
     <Drawer
       placement="right"
-      title="Add New Asset"
+      title="Add New Asset Price"
       closable={false}
       isOpen={isLoading || open}
       onClose={onCreateSuccess}
@@ -140,17 +139,10 @@ export function CreateAssetPriceDrawer({
           {...register("price")}
         />
        
-
-        <TextArea
-          label="Description"
-          required={true}
-          errors={errors}
-          {...register("description")}
-        />
         
         <TextInput
           label="Time Stamp"
-          type="date"
+          type="datetime-local"
           errors={errors}
           {...register("timestamp")}
         />
