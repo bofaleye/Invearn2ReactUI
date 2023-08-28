@@ -35,6 +35,14 @@ export interface AssetData extends IBaseModel {
   website?:              string;
 }
 
+export interface IAssetPrice extends IBaseModel {
+  assetId: string;
+  description:          string;
+  id:                   string;
+  isActive:             boolean;
+  price?:               number;
+  timestamp?:              Date
+}
 export interface Registrar {
   name:        string;
   code:        string;
