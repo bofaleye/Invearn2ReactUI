@@ -164,7 +164,7 @@ export function CreateBankDrawer({
           {...register("name")}
         />
         <TextInput
-          label="Code"
+          label="Code (ticker)"
           required={true}
           errors={errors}
           {...register("code")}
