@@ -340,7 +340,8 @@ export interface components {
       dateCreated?: string | null;
       /** Format: date-time */
       dateUpdated?: string | null;
-      assetId?: string | null;
+      asset?: components["schemas"]["AssetProps"];
+      code?: string | null;
       /** Format: double */
       price?: number;
       /** Format: date-time */
@@ -368,6 +369,11 @@ export interface components {
       totalCount?: number;
       hasPreviousPage?: boolean;
       hasNextPage?: boolean;
+    };
+    AssetProps: {
+      id?: string | null;
+      name?: string | null;
+      code?: string | null;
     };
     ClientCompanyViewModel: {
       id: string;

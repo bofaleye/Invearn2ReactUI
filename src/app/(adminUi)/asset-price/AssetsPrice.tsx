@@ -33,7 +33,7 @@ export const AssetPrice: React.FC = () => {
       <SuccessModal />
       <div className="shadow bg-white sm:rounded-lg">
         <div className="py-4 pr-8 pl-4 flex w-full items-center font-semibold justify-between">
-          <h1 className="text-lg font-semibold text-gray-900">All Assets</h1>
+          <h1 className="text-lg font-semibold text-gray-900">All Assets Price</h1>
           <Button
             isIcon={true}
             icon={<PlusIcon className="h-[1rem] w-[1rem] mr-2" />}
