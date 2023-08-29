@@ -10,7 +10,7 @@ import React, {
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { MySelect, MyTextInput } from "@/components/FormElements/Inputs";
+import { MySelect, TextInput } from "@/components/FormElements/Inputs";
 import FormButton from "@/components/FormElements/FormButton";
 import ReusableDrawer, { ReusableDrawerRef } from "@/components/ReusableDrawer";
 import { newUserSchema } from "../newUserSchema";
@@ -24,7 +24,7 @@ import SuccessModal from "@/components/Modals/SuccessModal";
 type FormData = Yup.InferType<typeof newUserSchema>;
 
 interface EditUserprops {
-  userData: IUser;
+  userData?: IUser | null;
   OnEditComplete: (isSuccess: boolean) => void;
 }
 
@@ -46,14 +46,16 @@ const _EditUser: React.ForwardRefRenderFunction<
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: yupResolver(newUserSchema),
+    resolver: yupResolver(newUserSchema)
+    // defaultValues: (userData ?? {})
   });
   const [toggleModal, setToggleModal] = useState(false);
 
   const onSubmit = (data: FormData) => {
     updateUser({
-      id: userData.id,
+      // id: userData?.id,
       ...data,
+      id: "" //
     }).then((res: any) => {
       if (res.error) {
         toast.error(`There was an error during edit, try again`, {
@@ -110,44 +112,35 @@ const _EditUser: React.ForwardRefRenderFunction<
         ref={drawerRef}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-          <MyTextInput
-            defaultValue={userData?.firstname}
+          <TextInput
             label="First Name"
             type="text"
-            register={register}
-            name="firstname"
+            {...register("firstname")}
+            // name="firstname"
             errors={errors}
           />
-          <MyTextInput
-            defaultValue={userData?.middlename}
+          <TextInput
             label="Middle Name"
-            name="middlename"
             type="text"
-            register={register}
+            {...register("middlename")}
             errors={errors}
           />
-          <MyTextInput
-            defaultValue={userData?.lastname}
+          <TextInput
             label="Last Name"
-            name="lastname"
             type="text"
-            register={register}
+            {...register("lastname")}
             errors={errors}
           />
-          <MyTextInput
-            defaultValue={userData?.email}
+          <TextInput
             label="Email"
-            name="email"
             type="emai"
-            register={register}
+            {...register("email")}
             errors={errors}
           />
-          <MyTextInput
-            defaultValue={userData?.dateOfBirth}
+          <TextInput
             label="Date of Birth"
-            name="dateOfBirth"
             type="date"
-            register={register}
+            {...register("dateOfBirth")}
             errors={errors}
           />
           <MySelect

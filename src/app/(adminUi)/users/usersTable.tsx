@@ -90,7 +90,7 @@ export const ConfirmationModal = (
 const UsersTable: React.FC<IUsersTableProps> = ({
   data,
   refetch,
-  handleEdit,
+  // handleEdit,
 }) => {
   const [columns, setColumns] = useState<ITableColumn[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -248,7 +248,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({
                         <Eye />
                         View
                       </Link>
-                      <div
+                      {/* <div
                         onClick={() => {
                           handleEdit(row);
                         }}
@@ -256,7 +256,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({
                       >
                         <Edit />
                         Edit
-                      </div>
+                      </div> */}
                       <div
                         onClick={() => handleDeleteModal()}
                         className="flex cursor-pointer text-left py-3 border-b border-neutral-50 text-small text-red-600 items-center gap-2"

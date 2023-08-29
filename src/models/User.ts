@@ -36,7 +36,6 @@ export interface IUser{
 
 export interface IUsersTableProps {
     data: any;
-    handleEdit: any;
     refetch: any;
   }
 
