@@ -149,7 +149,7 @@ export default function UserProfile({
           }
           PhoneNumber={userData?.phoneNumber || "08098123456"}
           UserType={"User"}
-          handleEdit={handleEditDrawer}
+          // handleEdit={handleEditDrawer}
         />
       </div>
       <EditUser

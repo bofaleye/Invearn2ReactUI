@@ -50,7 +50,7 @@ const ProfileInfo: FC<ProfileInfoData> = (
         <div className="my-2">
           <h2 className="font-bold text-xl">{profileInfo?.RegistrarName}</h2>
         </div>
-        <div className="mb-4">
+        {profileInfo?.handleEdit && <div className="mb-4">
           <Button
             appButtonType="deep-green"
             onClick={()=> {
@@ -63,7 +63,7 @@ const ProfileInfo: FC<ProfileInfoData> = (
             data-drawer-placement="right"
             aria-controls="edit-user-drawer"
           >Edit Profile</Button>
-        </div>
+        </div>}
       </div>
 
       <div className="mb-6">
