@@ -4,6 +4,7 @@ const APP_ROUTES = {
   banks: "/master-data/banks",
   document_formats: "/master-data/document-formats",
   users: "/users",
+  customers: "/customers",
   share_holder_types: "/master-data/holder-types",
   document_types: "/master-data/document-types",
   security_type: "/master-data/security-types",

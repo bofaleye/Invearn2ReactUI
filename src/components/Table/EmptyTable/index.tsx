@@ -30,9 +30,10 @@ const EmptyTable: React.FC<EmptyTableProps> = ({
           <h5 className="text-base font-medium text-gray-900 my-4">
             No data yet
           </h5>
-
+ 
+         {buttonText && <>
           <p className=" font-medium text-sm text-gray-500 mb-6 text-center">
-            {`To add a ${bodyText}, simply click the "${buttonText.toLowerCase()}"`}{" "}
+            {`To add a ${bodyText}, simply click the t "${buttonText.toLowerCase()}"`}{" "}
             <b /> button below.
           </p>
           <Button
@@ -42,6 +43,7 @@ const EmptyTable: React.FC<EmptyTableProps> = ({
             isIcon={true}
             appButtonType="deep-green"
           >{buttonText}</Button>
+          </>}
         </div>
       );
     case "in-table":
@@ -55,18 +57,23 @@ const EmptyTable: React.FC<EmptyTableProps> = ({
                 <h5 className="text-base font-medium text-gray-900 my-4">
                   No data yet
                 </h5>
-
-                <p className=" font-medium text-sm text-gray-500 mb-6 text-center">
-                  {`To add a ${bodyText}, simply click the "${buttonText.toLowerCase()}"`}{" "}
-                  <b /> button below.
-                </p>
-                <Button
-                  onClick={buttonMethod}
-                  {...buttonProps}
-                  icon={<PlusIcon className="h-4" />}
-                  isIcon={true}
-                  appButtonType="deep-green"
-                >{buttonText}</Button>
+                {buttonText && (
+                  <>
+                    <p className=" font-medium text-sm text-gray-500 mb-6 text-center">
+                      {`To add a ${bodyText}, simply click the "${buttonText.toLowerCase()}"`}{" "}
+                      <b /> button below.
+                    </p>
+                    <Button
+                      onClick={buttonMethod}
+                      {...buttonProps}
+                      icon={<PlusIcon className="h-4" />}
+                      isIcon={true}
+                      appButtonType="deep-green"
+                    >
+                      {buttonText}
+                    </Button>
+                  </>
+                )}
               </div>
             </td>
           </tr>

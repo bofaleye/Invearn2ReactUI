@@ -87,7 +87,7 @@ export const ConfirmationModal = (
   );
 };
 
-const UsersTable: React.FC<IUsersTableProps> = ({
+const CustomersTable: React.FC<IUsersTableProps> = ({
   data,
   refetch,
   // handleEdit,
@@ -242,7 +242,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({
                   {visibilities && visibilities[index] ? (
                     <div className="absolute border border-muted rounded-md z-10 right-0 top-full px-3 w-max bg-white">
                       <Link
-                        href={`/users/${row.id}`}
+                        href={`/customers/${row.id}`}
                         className="flex cursor-pointer text-left py-3 border-b border-neutral-50 text-small text-gray-700 items-center gap-2"
                       >
                         <Eye />
@@ -331,8 +331,8 @@ const UsersTable: React.FC<IUsersTableProps> = ({
     <>
       <div className="pb-4 pr-8 pl-4 flex w-full items-center justify-between sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
         <div className="w-3/4">
-          {/* <div className="hidden pb-6 border-b space-x-6 md:flex ">
-            <Select className="w-1/4" id="countries" required={true}>
+          <div className="hidden pb-6 border-b space-x-6 md:flex ">
+            {/* <Select className="w-1/4" id="countries" required={true}>
               <option>User</option>
               <option>Canada</option>
               <option>France</option>
@@ -355,14 +355,18 @@ const UsersTable: React.FC<IUsersTableProps> = ({
               <option>Canada</option>
               <option>France</option>
               <option>Germany</option>
-            </Select>
-          </div> */}
+            </Select> */}
+          </div>
         </div>
       </div>
       <div className="pb-4 pr-8 pl-4 flex w-full items-center justify-between sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700">
-        <div className="flex items-center gap-4">
-         
-          {/* <div className="flex items-center pl-4">
+        {/* <div className="flex items-center gap-4">
+          <div className="flex items-center">
+            <h2 className="text-gray-900 font-medium text-base dark:text-gray-300">
+              Show by:
+            </h2>
+          </div>
+          <div className="flex items-center pl-4">
             <input
               id="bordered-radio-1"
               type="radio"
@@ -376,8 +380,8 @@ const UsersTable: React.FC<IUsersTableProps> = ({
             >
               All
             </label>
-          </div> */}
-          {/* <div className="flex items-center pl-4">
+          </div>
+          <div className="flex items-center pl-4">
             <input
               id="bordered-radio-2"
               type="radio"
@@ -391,8 +395,8 @@ const UsersTable: React.FC<IUsersTableProps> = ({
             >
               Status
             </label>
-          </div> */}
-          {/* <div className="flex items-center pl-4">
+          </div>
+          <div className="flex items-center pl-4">
             <input
               id="bordered-radio-3"
               type="radio"
@@ -406,8 +410,8 @@ const UsersTable: React.FC<IUsersTableProps> = ({
             >
               Name
             </label>
-          </div> */}
-        </div>
+          </div>
+        </div> */}
       </div>
       <div className="relative overflow-x-auto">
         <Table
@@ -438,4 +442,4 @@ const UsersTable: React.FC<IUsersTableProps> = ({
   );
 };
 
-export default UsersTable;
+export default CustomersTable;
