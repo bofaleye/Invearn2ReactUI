@@ -3,7 +3,8 @@ import UserProfile from "./UserProfile";
 import BreadCrumbs from "@/components/AdminUi/BreadCrumbs";
 import { useParams } from "next/navigation";
 import { useFetchuserByIdQuery } from "../UserApiSlice";
-import { IUser } from "@/models/User";
+import { IUser } from "@/models/user";
+import APP_ROUTES from "@/constants/appRoute";
 
 export default function DisplayProfile() {
   const { id: routeUserId } = useParams();
@@ -12,8 +13,8 @@ export default function DisplayProfile() {
     <div className="px-4 pt-6 pb-10 ">
       <BreadCrumbs
         links={[
-          { label: "App Management", link: "#", isActive: true },
-          { label: "Users", link: "/users", isActive: true },
+          { label: "User Management", link: "#", isActive: true },
+          { label: "Users", link: APP_ROUTES.users, isActive: true },
           { label: "Profile", link: `/${routeUserId}`, isActive: true },
         ]}
       />

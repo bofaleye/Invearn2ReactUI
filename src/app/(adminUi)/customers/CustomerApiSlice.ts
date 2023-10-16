@@ -1,31 +1,31 @@
 import { apiSlice } from "@/store/apiSlice";
 import { Response } from "@/models/Response";
-import { NewUser } from "@/models/User";
-import { IUser, INewUserProps } from "@/models/User";
+import { NewCustomer } from "@/models/customer";
+import { ICustomer, INewUserProps } from "@/models/customer";
 // import { INewUserProps, IUser } from "@/models/User";
 
 const extendedApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    createUser: builder.mutation<NewUser, Partial<NewUser>>({
+    createUser: builder.mutation<NewCustomer, Partial<NewCustomer>>({
       query: (body) => ({
         url: `users`,
         method: "POST",
         body,
       }),
     }),
-    fetchUsers: builder.query<IUser[], void>({
+    fetchUsers: builder.query<ICustomer[], void>({
       query: () => "users",
-      transformResponse: (response: Response<IUser[]>, meta, arg) => {
-        return response.payload as IUser[];
+      transformResponse: (response: Response<ICustomer[]>, meta, arg) => {
+        return response.payload as ICustomer[];
       },
     }),
-    fetchuserById: builder.query<IUser, string>({
+    fetchuserById: builder.query<ICustomer, string>({
       query: (userId: string) => `users/${userId}`,
-      transformResponse: (response: Response<IUser>, meta, arg) => {
-        return response.payload as IUser;
+      transformResponse: (response: Response<ICustomer>, meta, arg) => {
+        return response.payload as ICustomer;
       },
     }),
-    updatUser: builder.mutation<void, Pick<IUser, "id"> & Partial<IUser>>({
+    updatUser: builder.mutation<void, Pick<ICustomer, "id"> & Partial<ICustomer>>({
       query: ({ id, ...patch }) => ({
         url: `users/${id}`,
         method: "PUT",
@@ -47,7 +47,7 @@ const extendedApi = apiSlice.injectEndpoints({
     }),
     activateDeactivateUser: builder.mutation<
       void,
-      Pick<IUser, "id"> & Partial<IUser>
+      Pick<ICustomer, "id"> & Partial<ICustomer>
     >({
       query: (data) => ({
         url: `users/ActivateDeactivateUser/${data.userId}?id=${data.id}&isActive=${data?.isActive}`,
@@ -70,7 +70,7 @@ const extendedApi = apiSlice.injectEndpoints({
 
     suspendUnSuspend: builder.mutation<
       void,
-      Pick<IUser, "id"> & Partial<IUser>
+      Pick<ICustomer, "id"> & Partial<ICustomer>
     >({
       query: (data) => ({
         url: `users/SuspendReinstateUser/${data.userId}?id=${data.id}&isDisabled=${data?.isDisabled}`,

@@ -11,6 +11,7 @@ interface ProfileInfoData {
   PhoneNumber: string;
   UserType: string;
   handleEdit?: any;
+  Username?: string
 }
 
 const ProfileInfo: FC<ProfileInfoData> = (
@@ -66,24 +67,30 @@ const ProfileInfo: FC<ProfileInfoData> = (
         </div>}
       </div>
 
-      <div className="mb-6">
+      {profileInfo?.EmailAddress && <div className="mb-6">
         <h3 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
           Email Address
         </h3>
         <b>{profileInfo?.EmailAddress}</b>
-      </div>
-      <div className="mb-6">
+      </div>}
+      {profileInfo?.Username && <div className="mb-6">
+        <h3 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+          Username
+        </h3>
+        <b>{profileInfo?.Username}</b>
+      </div>}
+      {profileInfo?.OfficeAddress && <div className="mb-6">
         <h3 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
           Office Address
         </h3>
         <b>{profileInfo?.OfficeAddress}</b>
-      </div>
-      <div className="mb-6">
+      </div>}
+      {profileInfo?.PhoneNumber &&<div className="mb-6">
         <h3 className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
           Phone Number
         </h3>
         <b>{profileInfo?.PhoneNumber}</b>
-      </div>
+      </div>}
     </div>
   );
 };

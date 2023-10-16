@@ -1,5 +1,5 @@
 import * as Yup from "yup";
- export const newUserSchema = Yup.object({
+ export const newCustomerSchema = Yup.object({
     firstname: Yup.string()
       .min(3, "Input must be  minimum of 3 characters")
       .required("First Name field empty"),

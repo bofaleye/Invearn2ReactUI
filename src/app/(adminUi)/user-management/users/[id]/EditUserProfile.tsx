@@ -12,9 +12,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { MySelect, TextInput } from "@/components/FormElements/Inputs";
 import FormButton from "@/components/FormElements/FormButton";
-import ReusableDrawer, { ReusableDrawerRef } from "@/components/ReusableDrawer";
+import Button from "@/components/Button";
+import Drawer from "@/components/Drawer";
 import { newUserSchema } from "../newUserSchema";
-import { IUser } from "@/models/User";
+import { IUser } from "@/models/user";
 import { useUpdatUserMutation } from "../UserApiSlice";
 import { useFetchUserRolesQuery } from "../userRolesApiSlice";
 import { UserRole } from "@/models/UserRole";
@@ -26,37 +27,27 @@ type FormData = Yup.InferType<typeof newUserSchema>;
 interface EditUserprops {
   userData?: IUser | null;
   OnEditComplete: (isSuccess: boolean) => void;
+  isOpen: boolean;
+  setOpen: ()=> void;
 }
 
-const _EditUser: React.ForwardRefRenderFunction<
-  ReusableDrawerRef,
-  EditUserprops
-> = (props, ref) => {
-  let drawerRef = useRef<ReusableDrawerRef>(null);
-  useImperativeHandle(ref, () => ({
-    hideDrawer,
-    showDrawer,
-  }));
-  const { userData } = props;
+const EditUserDrawer: React.FC<EditUserprops> = ({userData, OnEditComplete, isOpen, setOpen}) => {
   const Roles = useFetchUserRolesQuery();
   const [roleOptions, setRoleOptions] = useState<object[]>([]);
   const [updateUser, response] = useUpdatUserMutation();
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: yupResolver(newUserSchema)
-    // defaultValues: (userData ?? {})
+    resolver: yupResolver(newUserSchema),
+     defaultValues: (userData ?? {})
   });
   const [toggleModal, setToggleModal] = useState(false);
 
   const onSubmit = (data: FormData) => {
-    updateUser({
-      // id: userData?.id,
-      ...data,
-      id: "" //
-    }).then((res: any) => {
+    updateUser(data).then((res: any) => {
       if (res.error) {
         toast.error(`There was an error during edit, try again`, {
           position: toast.POSITION.TOP_LEFT,
@@ -67,9 +58,9 @@ const _EditUser: React.ForwardRefRenderFunction<
 
   useEffect(() => {
     if (response?.isSuccess) {
-      hideDrawer();
+      setOpen()
       setToggleModal(true);
-      props.OnEditComplete(response?.isSuccess);
+      OnEditComplete(response?.isSuccess);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [response]);
@@ -86,17 +77,7 @@ const _EditUser: React.ForwardRefRenderFunction<
     }
     setRoleOptions(options);
   }, [Roles.data]);
-  const hideDrawer = () => {
-    if (drawerRef.current) {
-      drawerRef.current.hideDrawer();
-    }
-  };
 
-  const showDrawer = () => {
-    if (drawerRef.current) {
-      drawerRef.current.showDrawer();
-    }
-  };
   return (
     <>
       <SuccessModal
@@ -104,80 +85,49 @@ const _EditUser: React.ForwardRefRenderFunction<
         onDoneClicked={() => setToggleModal(false)}
         message="Registrar updated Successfully"
       />
-      <ReusableDrawer
-        drawerId="edit-user-drawer"
+      <Drawer
         placement="right"
-        drawerTitle="Edit User"
-        subTitle="User Information"
-        ref={drawerRef}
+        title="Edit User"
+        closable={false}
+        isOpen={isOpen}
+        onClose={()=>OnEditComplete(response?.isSuccess)}
+        // ="User Information"
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-          <TextInput
-            label="First Name"
-            type="text"
-            {...register("firstname")}
+          {/* <TextInput
+            label="Email"
+            type="email"
+            {...register("email")}
             // name="firstname"
             errors={errors}
-          />
+          /> */}
+          
           <TextInput
-            label="Middle Name"
+            label="Username"
             type="text"
-            {...register("middlename")}
+            required={true}
             errors={errors}
+            {...register("userName")}
           />
-          <TextInput
-            label="Last Name"
-            type="text"
-            {...register("lastname")}
-            errors={errors}
-          />
-          <TextInput
-            label="Email"
-            type="emai"
-            {...register("email")}
-            errors={errors}
-          />
-          <TextInput
-            label="Date of Birth"
-            type="date"
-            {...register("dateOfBirth")}
-            errors={errors}
-          />
-          <MySelect
-            defaultValue={userData?.gender}
-            label="Gender"
-            name="gender"
-            options={[
-              {
-                name: "Male",
-                value: "male",
-              },
-              {
-                name: "Female",
-                value: "female",
-              },
-            ]}
-            register={register}
-            errors={errors}
-          />
+      
 
-          <MySelect
+          {/* <MySelect
             defaultValue={userData?.applicationRoles}
             label="User Role"
             name="role"
             options={roleOptions}
             register={register}
             errors={errors}
-          />
+          /> */}
           <div className="flex col-span-6 sm:col-full space-x-4 mt-4 justify-end">
-            <button
-              data-drawer-hide="edit-user-drawer"
-              aria-controls="edit-user-drawer"
-              className="text-CEMCS-Blue-100 border  w-[25%] border-gray-300 focus:outline-none hover:bg-gray-100  focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              type="button"
-            >
-              Back
-            </button>
+          <Button
+            type="button"
+            appButtonType="green-outline"
+            onClick={() => {
+               setOpen();
+               reset();
+            }}
+          >Cancel</Button>
 
             <FormButton
               className="text-white bg-green-500 hover:bg-green-600 focus:ring-4
@@ -191,10 +141,9 @@ const _EditUser: React.ForwardRefRenderFunction<
             </FormButton>
           </div>
         </form>
-      </ReusableDrawer>
+      </Drawer>
     </>
   );
 };
 
-const EditUser = forwardRef<ReusableDrawerRef, EditUserprops>(_EditUser);
-export default EditUser;
+export default EditUserDrawer;

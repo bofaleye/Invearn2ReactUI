@@ -1,6 +1,6 @@
 import ProfileInfo from "@/components/ProfileInfo";
 import React, { Component, useEffect, useRef, useState } from "react";
-import { IUser } from "@/models/User";
+import { IUser } from "@/models/user";
 import { ReusableDrawerRef } from "@/components/ReusableDrawer";
 import EditUser from "./EditUserProfile";
 import { Badge, Modal } from "flowbite-react";
@@ -16,7 +16,7 @@ import { UserRole } from "@/models/UserRole";
 import { MySelect } from "@/components/FormElements/Inputs";
 import { toast } from "react-toastify";
 import SuccessModal from "@/components/Modals/SuccessModal";
-import { useSuspendUnSuspendMutation } from "../UserApiSlice";
+// import { useSuspendUnSuspendMutation } from "../UserApiSlice";
 import { GpToast } from "@/components/Toast";
 import { LockIcon, UnlockIcon } from "@/assets";
 import { ConfirmationModal } from "../usersTable";
@@ -39,7 +39,6 @@ export default function UserProfile({
   const [addRoleToUser, response] = useAddRoleToUserMutation();
   const [addRoleSuccessModal, setAddRoleSuccessToggleModal] = useState(false);
   const [roleOptions, setRoleOptions] = useState<object[]>([]);
-  const [suspendUser, suspendUserResponse] = useSuspendUnSuspendMutation();
   const {
     register,
     handleSubmit,
@@ -104,50 +103,17 @@ export default function UserProfile({
   }, [Roles.data]);
   const [showIsSuspendModal, setShowIsSuspendModal] = useState<boolean>(false);
 
-  const handleSuspendModal = () => {
-    setShowIsSuspendModal(!showIsSuspendModal);
-  };
-
-  const handleSuspendUser = (row: IUser) => {
-    suspendUser({
-      id: row.id,
-      userId: row.id,
-      isDisabled: !row.isDisabled,
-    }).then((res: any) => {
-      if (res.error) {
-        handleSuspendModal();
-        GpToast({
-          type: "error",
-          message: "An error occured, kindly try again",
-          placement: toast.POSITION.TOP_LEFT,
-        });
-      }
-    });
-  };
-
-  useEffect(() => {
-    if (suspendUserResponse.isSuccess) {
-      const { message } = suspendUserResponse.data;
-      GpToast({
-        type: "success",
-        message: message,
-        placement: toast.POSITION.TOP_LEFT,
-      });
-      refetch();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [suspendUserResponse]);
-
   return (
     <div className="w-[90%]  flex justify-between">
       <div className="w-[33%]">
         <ProfileInfo
+          Username={userData?.userName}
           RegistrarName={userData?.name || ""}
           EmailAddress={`${userData?.email}` || ""}
           OfficeAddress={
-            userData?.organisation?.address || "222B Palmgrove Ikorodu Rd"
+            userData?.organisation?.address || ""
           }
-          PhoneNumber={userData?.phoneNumber || "08098123456"}
+          PhoneNumber={userData?.phoneNumber || ""}
           UserType={"User"}
           // handleEdit={handleEditDrawer}
         />
@@ -159,62 +125,14 @@ export default function UserProfile({
       />
       <div className="w-[65%] flex justify-center items-center  p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-4 dark:bg-gray-800">
         <div className="w-[90%]">
-          <div className="my-2">
-            {userData?.isDisabled ? (
-              <div
-                onClick={() => setShowIsSuspendModal(!showIsSuspendModal)}
-                className="flex justify-start cursor-pointer  py-3 border-b border-neutral-50 text-red-600 items-center gap-2"
-              >
-                <LockIcon className="w-6 h-6" />
-                Reinstate user
-                {ConfirmationModal(
-                  `Are you sure you want to ${
-                    userData?.isDisabled ? "re-instate" : "suspend"
-                  } this user?`,
-                  `${userData?.isDisabled ? "Reinstate" : "Suspend"}`,
-                  showIsSuspendModal,
-
-                  () => {
-                    setShowIsSuspendModal(!showIsSuspendModal);
-                  },
-                  () => {
-                    handleSuspendUser(userData);
-                  },
-                  suspendUserResponse.isLoading
-                )}
-              </div>
-            ) : (
-              <div
-                onClick={() => setShowIsSuspendModal(!showIsSuspendModal)}
-                className="flex justify-start cursor-pointer  py-3 border-b border-neutral-50 text-gray-700 items-center gap-2"
-              >
-                <UnlockIcon />
-                Suspend user
-                {ConfirmationModal(
-                  `Are you sure you want to ${
-                    userData?.isDisabled ? "re-instate" : "suspend"
-                  } this user?`,
-                  `${userData?.isDisabled ? "Reinstate" : "Suspend"}`,
-                  showIsSuspendModal,
-
-                  () => {
-                    setShowIsSuspendModal(!showIsSuspendModal);
-                  },
-                  () => {
-                    handleSuspendUser(userData);
-                  },
-                  suspendUserResponse.isLoading
-                )}
-              </div>
-            )}
-          </div>
+  
           <div className="grid grid-cols-2 grid-rows-2 gap-y-2.5">
-            <div>
+            {userData?.gender && <div>
               <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Gender
               </h3>
               <b>{userData?.gender || "Male"}</b>
-            </div>
+            </div>}
             <div>
               <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Position
@@ -227,12 +145,12 @@ export default function UserProfile({
               </h3>
               <b>User</b>
             </div>
-            <div>
+            {userData?.dateOfBirth && <div>
               <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Date of Birth
               </h3>
               <b>{userData?.dateOfBirth.split("T")[0]}</b>
-            </div>
+            </div>}
 
             <div>
               <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -240,12 +158,12 @@ export default function UserProfile({
               </h3>
               <b>{userData?.isActive ? "Active" : "Inactive"}</b>
             </div>
-            <div>
+            {userData?.roles && <div>
               <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Department
               </h3>
               <b>Operations</b>
-            </div>
+            </div>}
           </div>
           <div className="mt-5">
             <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -257,7 +175,7 @@ export default function UserProfile({
                   {role.toLowerCase() || "Staff"}
                 </Badge>
               ))} */}
-              <Badge size="sm" className="py-2" color="info">
+              {/* <Badge size="sm" className="py-2" color="info">
                 Staff
               </Badge>
               <Badge size="sm" className="py-2" color="warning">
@@ -265,7 +183,7 @@ export default function UserProfile({
               </Badge>
               <Badge size="sm" className="py-2" color="success">
                 Super Admin
-              </Badge>
+              </Badge> */}
             </div>
             <div className="flex gap-4">
               <Button

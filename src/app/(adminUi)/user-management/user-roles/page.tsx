@@ -1,5 +1,5 @@
-function UserRolePage(){
-    return<div>
-        
-    </div>
+import Roles from "./Roles";
+
+export default function UserRolePage(){
+    return <Roles />;
 }

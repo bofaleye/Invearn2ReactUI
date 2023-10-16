@@ -1,43 +1,28 @@
 export interface NewUser {
 
-  organisationId: string,
-  firstname: string,
-  lastname: string,
-  middlename: string,
-  gender: string,
+  userName: string,
+  description: string,
   email: string,
-  dateOfBirth: string,
-  applicationRoleId: string
+  password: string,
 }
 
 export interface IUser{
     [x: string]: any;
-    name: string;
-    phoneNumber: string;
-    isLockedOut: any;
-    roles: any;
+    userName: string,
+    description: string,
+    dateCreated: string,
+    dateUpdated: string,
     isActive: boolean;
     id: string,
-    userId: string,
-    applicationUserId?: string,
-    organisationId: string,
-    firstname: string,
-    lastname: string,
-    middlename: string,
-    gender: string,
     email: string,
-    dateOfBirth: string,
-    applicationRoles?: string[],
-    organisation: any,
-    isDisabled: boolean,
-
-
 }
 
 export interface IUsersTableProps {
     data: any;
     refetch: any;
-  }
+    openNewUserDrawer: ()=> void;
+    handleEdit: (data: IUser)=> void;
+}
 
   export interface INewUserProps {
     OnCreateComplete: (isSuccess: boolean)=> void

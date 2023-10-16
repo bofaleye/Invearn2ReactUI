@@ -5,11 +5,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { PlusIcon } from "@/assets";
 import { ITableColumn } from "@/components/Table/model";
 import SuccessModal from "@/components/Modals/SuccessModal";
-import { useFetchUsersQuery } from "./UserApiSlice";
+import { useFetchUsersQuery } from "./CustomerApiSlice";
 import BreadCrumbs from "@/components/AdminUi/BreadCrumbs";
 
-import CustomersTable from "./CustomersTable";
-import { IUser } from "@/models/User";
+import CustomersTable from "./customersTable";
+import { ICustomer } from "@/models/customer";
 import AppSkeleton from "@/components/Skeleton";
 import { ReusableDrawerRef } from "@/components/ReusableDrawer";
 // import EditUser from "./[id]/EditUserProfile";
@@ -23,11 +23,11 @@ export default function Customers() {
     refetch: refetchUsers,
   } = useFetchUsersQuery();
   const [columns, setColumns] = useState<ITableColumn[]>([]);
-  const [usersData, setUsersData] = useState<IUser[]>([]);
+  const [usersData, setUsersData] = useState<ICustomer[]>([]);
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
-  const [actionUser, setActionUser] = useState<IUser>();
+  const [actionUser, setActionUser] = useState<ICustomer>();
 
   const handleUsersRefresh = (isSuccess: boolean) => {
     if (isSuccess) {

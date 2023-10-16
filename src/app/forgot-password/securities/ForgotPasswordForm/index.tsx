@@ -39,7 +39,7 @@ const ForgetPasswordForm: React.FC<ForgetPasswordFormProps> = ({
     <div className="bg-white rounded-lg shadow lg:w-2/5 sm:w-3/5 w-full dark:bg-gray-800 md:p-14 px-6 py-10">
       {/** GreenPole Logo */}
       <div className="mb-8">
-        <Image src="/Greenpole-Logo 1.svg" alt="" width={178} height={61} />
+        <Image src="/invearn_logo.svg"  alt="" width={178} height={61} />
       </div>
 
       <div className="w-full">

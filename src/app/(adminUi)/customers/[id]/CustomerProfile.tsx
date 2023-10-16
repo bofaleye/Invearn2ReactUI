@@ -1,6 +1,6 @@
 import ProfileInfo from "@/components/ProfileInfo";
 import React, { Component, useEffect, useRef, useState } from "react";
-import { IUser } from "@/models/User";
+import { ICustomer } from "@/models/customer";
 import { ReusableDrawerRef } from "@/components/ReusableDrawer";
 import EditUser from "./EditCustomerProfile";
 import { Badge, Modal } from "flowbite-react";
@@ -12,14 +12,14 @@ import { UserRole } from "@/models/UserRole";
 import { MySelect } from "@/components/FormElements/Inputs";
 import { toast } from "react-toastify";
 import SuccessModal from "@/components/Modals/SuccessModal";
-import { useSuspendUnSuspendMutation } from "../UserApiSlice";
+import { useSuspendUnSuspendMutation } from "../CustomerApiSlice";
 import { GpToast } from "@/components/Toast";
 import { LockIcon, UnlockIcon } from "@/assets";
 import { ConfirmationModal } from "../customersTable";
 
 //TODO: Include skeleton when data is fetching
 interface UserProfileProps {
-  userData: IUser;
+  userData: ICustomer;
   isFetching: boolean;
   refetch: any;
 }
@@ -48,15 +48,15 @@ export default function CustomerProfile({
   });
 
   
-  useEffect(() => {
-    if (response?.isSuccess) {
-      setAddOpenModal(!openAddModal);
-      setAddRoleSuccessToggleModal(true);
-      reset();
-      refetch();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [response]);
+  // useEffect(() => {
+  //   if (response?.isSuccess) {
+  //     setAddOpenModal(!openAddModal);
+  //     setAddRoleSuccessToggleModal(true);
+  //     reset();
+  //     refetch();
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [response]);
 
   const handleEditDrawer = () => {
     editUserRef.current?.showDrawer();
@@ -68,25 +68,25 @@ export default function CustomerProfile({
     }
   };
 
-  useEffect(() => {
-    let options: object[] = [];
-    if (Roles.data) {
-      Roles.data.forEach((item: UserRole) =>
-        options.push({
-          name: item.name,
-          value: item.name,
-        })
-      );
-    }
-    setRoleOptions(options);
-  }, [Roles.data]);
+  // useEffect(() => {
+  //   let options: object[] = [];
+  //   if (Roles.data) {
+  //     Roles.data.forEach((item: UserRole) =>
+  //       options.push({
+  //         name: item.name,
+  //         value: item.name,
+  //       })
+  //     );
+  //   }
+  //   setRoleOptions(options);
+  // }, [Roles.data]);
   const [showIsSuspendModal, setShowIsSuspendModal] = useState<boolean>(false);
 
   const handleSuspendModal = () => {
     setShowIsSuspendModal(!showIsSuspendModal);
   };
 
-  const handleSuspendUser = (row: IUser) => {
+  const handleSuspendUser = (row: ICustomer) => {
     suspendUser({
       id: row.id,
       userId: row.id,
@@ -123,9 +123,9 @@ export default function CustomerProfile({
           RegistrarName={userData?.name || ""}
           EmailAddress={`${userData?.email}` || ""}
           OfficeAddress={
-            userData?.organisation?.address || "222B Palmgrove Ikorodu Rd"
+            userData?.organisation?.address || "N/A"
           }
-          PhoneNumber={userData?.phoneNumber || "08098123456"}
+          PhoneNumber={userData?.phoneNumber || "N/A"}
           UserType={"Customer"}
           // handleEdit={handleEditDrawer}
         />

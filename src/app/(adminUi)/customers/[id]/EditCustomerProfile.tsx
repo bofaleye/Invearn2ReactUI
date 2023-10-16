@@ -13,17 +13,17 @@ import * as Yup from "yup";
 import { MySelect, TextInput } from "@/components/FormElements/Inputs";
 import FormButton from "@/components/FormElements/FormButton";
 import ReusableDrawer, { ReusableDrawerRef } from "@/components/ReusableDrawer";
-import { newUserSchema } from "../newUserSchema";
-import { IUser } from "@/models/User";
-import { useUpdatUserMutation } from "../UserApiSlice";
-import { UserRole } from "@/models/UserRole";
+import { newCustomerSchema } from "../newCustomerSchema";
+import { ICustomer } from "@/models/customer";
+import { useUpdatUserMutation } from "../CustomerApiSlice";
+// import { UserRole } from "@/models/UserRole";
 import { toast } from "react-toastify";
 import SuccessModal from "@/components/Modals/SuccessModal";
 
-type FormData = Yup.InferType<typeof newUserSchema>;
+type FormData = Yup.InferType<typeof newCustomerSchema>;
 
 interface EditUserprops {
-  userData?: IUser | null;
+  userData?: newCustomerSchema | null;
   OnEditComplete: (isSuccess: boolean) => void;
 }
 
@@ -37,7 +37,7 @@ const _EditUser: React.ForwardRefRenderFunction<
     showDrawer,
   }));
   const { userData } = props;
-  const Roles = useFetchUserRolesQuery();
+  // const Roles = useFetchUserRolesQuery();
   const [roleOptions, setRoleOptions] = useState<object[]>([]);
   const [updateUser, response] = useUpdatUserMutation();
   const {
@@ -45,7 +45,7 @@ const _EditUser: React.ForwardRefRenderFunction<
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: yupResolver(newUserSchema)
+    resolver: yupResolver(newCustomerSchema)
     // defaultValues: (userData ?? {})
   });
   const [toggleModal, setToggleModal] = useState(false);
@@ -73,18 +73,18 @@ const _EditUser: React.ForwardRefRenderFunction<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [response]);
 
-  useEffect(() => {
-    let options: object[] = [];
-    if (Roles.data) {
-      Roles.data.map((item: UserRole) =>
-        options.push({
-          name: item.name,
-          value: item.id,
-        })
-      );
-    }
-    setRoleOptions(options);
-  }, [Roles.data]);
+  // useEffect(() => {
+  //   let options: object[] = [];
+  //   if (Roles.data) {
+  //     Roles.data.map((item: UserRole) =>
+  //       options.push({
+  //         name: item.name,
+  //         value: item.id,
+  //       })
+  //     );
+  //   }
+  //   setRoleOptions(options);
+  // }, [Roles.data]);
   const hideDrawer = () => {
     if (drawerRef.current) {
       drawerRef.current.hideDrawer();
@@ -160,14 +160,14 @@ const _EditUser: React.ForwardRefRenderFunction<
             errors={errors}
           />
 
-          <MySelect
+          {/* <MySelect
             defaultValue={userData?.applicationRoles}
             label="User Role"
             name="role"
             options={roleOptions}
             register={register}
             errors={errors}
-          />
+          /> */}
           <div className="flex col-span-6 sm:col-full space-x-4 mt-4 justify-end">
             <button
               data-drawer-hide="edit-user-drawer"

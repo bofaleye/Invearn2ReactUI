@@ -7,13 +7,14 @@ import Link from "next/link";
 import { Delete, Edit, Eye } from "@/assets";
 import { Modal, Select } from "flowbite-react";
 import Table from "@/components/Table";
-import { IUsersTableProps,  IUser } from "@/models/User";
+import { IUsersTableProps,  IUser } from "@/models/user";
 import { RiErrorWarningLine } from "react-icons/ri";
 import Button from "@/components/Button";
-import { useDeleteUserMutation, useActivateDeactivateUserMutation } from "./UserApiSlice";
+import { useDeleteUserMutation } from "./UserApiSlice";
 import SuccessModal from "@/components/Modals/SuccessModal";
 import { toast } from "react-toastify";
 import { GpToast } from '@/components/Toast';
+import APP_ROUTES from "@/constants/appRoute";
 
 const PromptModal = (
   bodyText: string,
@@ -90,14 +91,15 @@ export const ConfirmationModal = (
 const UsersTable: React.FC<IUsersTableProps> = ({
   data,
   refetch,
-  // handleEdit,
+  openNewUserDrawer,
+ handleEdit,
 }) => {
   const [columns, setColumns] = useState<ITableColumn[]>([]);
   const [page, setPage] = useState<number>(1);
   const [deleteUser, deleteResponse] = useDeleteUserMutation();
 
   const [showIsDeleteModal, setShowIsDeleteModal] = useState(false);
-  const [deactivateActivateUser, deactivateActiveResponse] = useActivateDeactivateUserMutation();
+  // const [deactivateActivateUser, deactivateActiveResponse] = useActivateDeactivateUserMutation();
   const handleDeleteModal = () => {
     setShowIsDeleteModal(!showIsDeleteModal);
   };
@@ -118,47 +120,22 @@ const UsersTable: React.FC<IUsersTableProps> = ({
       .then((res: any) => {
         if (deleteResponse.isSuccess) {
           handleDeleteModal();
+          GpToast({
+            type: "success",
+            message: "User Successfully Deleted",
+            placement: toast.POSITION.TOP_RIGHT,
+          });
           setToggleSuccessModal(!toggleSuccessModal);
           refetch();
         }
       })
       .catch((error: any) => {
-        toast.error(`An error occured, kindly try again`, {
+        toast.error(`An error occurred, kindly try again`, {
           position: toast.POSITION.TOP_LEFT,
         });
       });
   };
 
-  const handleDeactivateUser = (row: IUser) => {
-    deactivateActivateUser({
-      id: row.id,
-      userId: row.id,
-      isActive: !row.isActive,
-    }).then((res: any) => {
-      if (res.error) {
-        handleDeactivateModal();
-        GpToast({
-          type: 'error',
-          message: 'An error occured, kindly try again',
-          placement: toast.POSITION.TOP_LEFT,
-        });
-      }
-    });
-  };
-
-  useEffect(() => {
-    if (deactivateActiveResponse.isSuccess) {
-      handleDeactivateModal();
-      const { message } = deactivateActiveResponse.data;
-      GpToast({
-        type: 'success',
-        message: message,
-        placement: toast.POSITION.TOP_LEFT,
-      });
-      refetch();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deactivateActiveResponse]);
 
   useEffect(() => {
     if (deleteResponse.isSuccess) {
@@ -173,10 +150,10 @@ const UsersTable: React.FC<IUsersTableProps> = ({
     setColumns(usersTableColumns);
   }, []);
 
-  const [filteredTableData, setFilteredTableData] = useState(data?.items);
+  const [filteredTableData, setFilteredTableData] = useState(data);
 
   useEffect(() => {
-    setFilteredTableData(data?.items);
+    setFilteredTableData(data);
   }, [data]);
 
   
@@ -209,20 +186,8 @@ const UsersTable: React.FC<IUsersTableProps> = ({
           return {
             uid: row.id,
             key: index,
-            name: (
-              <div className="flex items-center text-gray-900 text-base font-medium">
-                <div className="relative inline-flex items-center justify-center w-8 h-8 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-                  <span className="font-medium text-gray-600 dark:text-gray-300">
-                    {getInitials(row.name)}
-                  </span>
-                </div>
-                <div className="ml-2">{`${row.name}`}</div>
-              </div>
-            ),
+            username: row.userName,
             email: row.email,
-            phoneNumber: row.phoneNumber,
-            address: row.address,
-            state: row.state,
             status: (
               <div className="flex items-center text-gray-900 font-medium">
                 <div
@@ -242,13 +207,13 @@ const UsersTable: React.FC<IUsersTableProps> = ({
                   {visibilities && visibilities[index] ? (
                     <div className="absolute border border-muted rounded-md z-10 right-0 top-full px-3 w-max bg-white">
                       <Link
-                        href={`/users/${row.id}`}
+                        href={`${APP_ROUTES.users}/${row.id}`}
                         className="flex cursor-pointer text-left py-3 border-b border-neutral-50 text-small text-gray-700 items-center gap-2"
                       >
                         <Eye />
                         View
                       </Link>
-                      {/* <div
+                      <div
                         onClick={() => {
                           handleEdit(row);
                         }}
@@ -256,7 +221,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({
                       >
                         <Edit />
                         Edit
-                      </div> */}
+                      </div> 
                       <div
                         onClick={() => handleDeleteModal()}
                         className="flex cursor-pointer text-left py-3 border-b border-neutral-50 text-small text-red-600 items-center gap-2"
@@ -277,45 +242,6 @@ const UsersTable: React.FC<IUsersTableProps> = ({
                           deleteResponse.isLoading
                         )}
                       </div>
-                      {row.isActive ? (
-                        <div
-                          onClick={() => handleDeactivateModal()}
-                          className="flex cursor-pointer text-left py-3 border-b border-neutral-50 text-small text-red-600 items-center gap-2"
-                        >
-                          Deactivate
-                          {ConfirmationModal(
-                            'Are you sure you want to deactivate this user?',
-                            'Deactivate',
-                            showIsDeactivateModal,
-                            () => {
-                              setShowIsDeactivateModal(!showIsDeactivateModal);
-                            },
-                            () => {
-                              handleDeactivateUser(row);
-                            },
-                            deactivateActiveResponse.isLoading
-                          )}
-                        </div>
-                      ) : (
-                        <div
-                          onClick={() => handleActivateModal()}
-                          className="flex cursor-pointer text-left py-3 border-b border-neutral-50 text-small text-gray-700 items-center gap-2"
-                        >
-                          Activate
-                          {ConfirmationModal(
-                            'Are you sure you want to activate this user?',
-                            'Activate',
-                            showIsActivateModal,
-                            () => {
-                              setShowIsActivateModal(!showIsActivateModal);
-                            },
-                            () => {
-                              handleDeactivateUser(row);
-                            },
-                            deactivateActiveResponse.isLoading
-                          )}
-                        </div>
-                      )}
                     </div>
                   ) : (
                     ''
@@ -419,6 +345,17 @@ const UsersTable: React.FC<IUsersTableProps> = ({
           totalItems={filteredTableData?.length}
           pageSize={10}
           useEmptyTable={true}
+          emptyTableProps={{
+            buttonProps: {
+              "data-drawer-placement": "right",
+              "aria-controls": "create-registrar-drawer",
+            },
+            buttonMethod: () => {
+              openNewUserDrawer();
+            },
+            bodyText: `New User`,
+            buttonText: `Add User`,
+          }}
         />
         <div className="flex justify-between items-center pt-3 sm:pt-6">
           <div className="p-3">

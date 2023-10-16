@@ -2,8 +2,8 @@
 import CustomerProfile from "./CustomerProfile";
 import BreadCrumbs from "@/components/AdminUi/BreadCrumbs";
 import { useParams } from "next/navigation";
-import { useFetchuserByIdQuery } from "../UserApiSlice";
-import { IUser } from "@/models/User";
+import { useFetchuserByIdQuery } from "../CustomerApiSlice";
+import { ICustomer } from "@/models/customer";
 
 export default function DisplayProfile() {
   const { id: routeUserId } = useParams();
@@ -23,7 +23,7 @@ export default function DisplayProfile() {
         </div>
       </div>
       <CustomerProfile
-        userData={data as IUser}
+        userData={data as ICustomer}
         isFetching={isFetching}
         refetch={refetch}
       />
